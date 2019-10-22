@@ -4,19 +4,51 @@
       <div style="display: flex;align-items: center;position: relative">
         <img v-bind:src="menuIconUrl" @click="show=!show" style="width: 30px;height: 30px"/>
         <span style="font-size: 20px;margin-left: 10px">全部笔记</span>
-        <img v-bind:src="searchIconUrl" @click="show=!show" style="width: 20px;height: 20px;position: absolute;right: 30px;"/>
+        <img v-bind:src="searchIconUrl" @click="showItemMenu=!showItemMenu" style="width: 20px;height: 20px;position: absolute;right: 10px;"/>
       </div>
-      <div>
+      <div class="cn-item-body">
+        <div class="cn-item-li">
+          <div class="cn-item-main" style="border:1px solid rgba(25,137,250,0.26);">
+            <div class="cn-item-text">
+              <span style="font-size: 18px">闽南师范大学--www.mnnu.com</span>
+            </div>
+            <div class="cn-item-time">
+              <span style="font-size: larger;color: #bdbdbd">2019-10-22 14:14:20</span>
+            </div>
+          </div>
+          <div class="cn-item-mask"></div>
+          <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="cn-item-menu" style="border:1px solid rgba(25,137,250,0.26);" v-if="showItemMenu">
+              <img class="i-icon" v-bind:src="copyIconUrl" @click="show=!show"/>
+              <img class="i-icon" style="margin-left: 50px" v-bind:src="favYesOrNoIconUrl" @click="show=!show"/>
+              <img class="i-icon" style="margin-left: 50px" v-bind:src="deleteIconUrl" @click="show=!show"/>
+            </div>
+          </transition>
+        </div>
+      </div>
 
+
+      <div class="cn-item-body">
+        <div class="cn-item-li">
+          <div class="cn-item-main" style="border:1px solid rgba(25,137,250,0.26);">
+            <div class="cn-item-text">
+              <span style="font-size: 18px">闽南师范大学--www.mnnu.com</span>
+            </div>
+            <div class="cn-item-time">
+              <span style="font-size: larger;color: #bdbdbd">2019-10-22 14:14:20</span>
+            </div>
+          </div>
+          <div class="cn-item-mask"></div>
+          <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="cn-item-menu" style="border:1px solid rgba(25,137,250,0.26);" v-if="showItemMenu">
+              <img class="i-icon" v-bind:src="copyIconUrl" @click="show=!show"/>
+              <img class="i-icon" style="margin-left: 50px" v-bind:src="favYesOrNoIconUrl" @click="show=!show"/>
+              <img class="i-icon" style="margin-left: 50px" v-bind:src="deleteIconUrl" @click="show=!show"/>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
-
-
-
-
-
-
-
 
     <transition mode="out-in" enter-active-class="animated zoomIn" leave-active-class="animated zoomOutDown">
       <div class="popup" v-if="show" :style="popupStyle">
@@ -79,6 +111,9 @@
                 setIconUrl: "../../static/set_icon.png",
                 menuIconUrl: "../../static/menu_icon.png",
                 searchIconUrl: "../../static/search_icon.png",
+                copyIconUrl: "../../static/copy_icon.png",
+                favYesOrNoIconUrl: "../../static/fav_no.png",
+                deleteIconUrl: "../../static/delete_icon.png",
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
@@ -86,6 +121,7 @@
                 favoriteText: "我的收藏",
                 rubbishText: "最近删除",
                 show: false,
+                showItemMenu: false,
                 popupStyle: {},
                 sites: [
                     { iconUrl: '../../static/bookmark/bookmark-blue.png',markText:'个人',markNum:'0' },
@@ -102,6 +138,11 @@
                     this.show = false;
                 }
 
+            },
+            cancelItemMenu(){
+                if(this.showItemMenu){
+                    this.showItemMenu=false;
+                }
             }
         }
     }
@@ -154,5 +195,55 @@
     font-size: large;
     right: 50px;
   }
+
+  .cn-item-body{
+    margin-top: 50px
+  }
+  .cn-item-li{
+    position: relative;
+  }
+  .cn-item-main{
+    border-radius: 15px;
+    padding: 20px;
+
+
+  }
+  .cn-item-text{
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+  .cn-item-time{
+
+  }
+  .cn-item-mask{
+    background-color: blue;
+    position: absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    background-color: rgba(221,217,213,0);
+  }
+  .cn-item-menu{
+    border:1px solid rgba(25,137,250,0.26);
+    border-radius: 10px;
+    position: absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    background-color: rgba(255,255,255,0.81);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cn-item-menu .i-icon{
+    width: 100px;
+    height: 100px;
+  }
+
 </style>
+
+
 

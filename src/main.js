@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import animated from 'animate.css'
 import 'lib-flexible'
+import MuseUI from 'muse-ui';
+import 'muse-ui/dist/muse-ui.css';
+
+Vue.use(MuseUI);
 Vue.use(animated);
 Vue.config.productionTip = false
 
