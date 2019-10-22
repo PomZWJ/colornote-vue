@@ -10,6 +10,10 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "animate.css": "^3.7.2",
+    "lib-flexible": "^0.3.2",
+    "muse-ui": "^3.0.2",
+    "postcss-px2rem-exclude": "0.0.6",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
