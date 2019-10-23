@@ -42,10 +42,10 @@
       </div>
       </div>
 
-
+      <!--新增按钮和回到顶部按钮-->
       <div class="footer">
         <div class="goTopBtn" v-if="goTop" @click="toTop"></div>
-        <div class="addNoteBtn" @click="toTop"></div>
+        <div class="addNoteBtn" @click="addNote"></div>
       </div>
     </div>
     <!--主菜单页-->
@@ -204,6 +204,9 @@
                         clearInterval(timeTop);
                     }
                 }, 10);
+            },
+            addNote(){
+
             }
         }
     }
