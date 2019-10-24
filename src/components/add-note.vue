@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="note-mask">
-      <div style="display: inline-block">
+      <div class="nm-div">
         <select>
           <option>未分类</option>
           <option>未分类</option>
@@ -17,8 +17,8 @@
           <option>未分类</option>
         </select>
       </div>
-      <div style="display: inline-block">
-        <span style="font-size: 15px;margin-left: 8px;margin-top: 8px;color: rgba(128,128,128,0.49)">{{currentTime}}</span>
+      <div class="nm-div time-div">
+        <span class="nm-div-time-span">{{currentTime}}</span>
       </div>
     </div>
     <div style="position: fixed">
@@ -77,5 +77,19 @@
   }
   .note-mask{
     padding: 30px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  .note-mask .nm-div{
+    display: inline-block
+  }
+  .note-mask .time-div{
+    position: absolute;
+    right: 0;
+  }
+  .nm-div-time-span{
+    font-size: 15px !important;
+    color: rgba(128,128,128,0.49);
   }
 </style>
