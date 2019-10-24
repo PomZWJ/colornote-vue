@@ -9,7 +9,7 @@
         <!--bar title-->
         <span style="font-size: 20px;margin-left: 10px">全部笔记</span>
         <!--搜索图标-->
-        <img v-bind:src="searchIconUrl" style="width: 30px;height: 30px;position: absolute;right: 10px;"/>
+        <img   v-bind:src="searchIconUrl" style="width: 30px;height: 30px;position: absolute;right: 10px;"/>
       </div>
       <div>
       <!--笔记条目(使用v-for循环)-->
@@ -45,7 +45,7 @@
       <!--新增按钮和回到顶部按钮-->
       <div class="footer">
         <div class="goTopBtn" v-if="goTop" @click="toTop"></div>
-        <div class="addNoteBtn" @click="addNote"></div>
+        <div class="addNoteBtn" @click="handleRouterToAddNote"></div>
       </div>
     </div>
     <!--主菜单页-->
@@ -184,6 +184,11 @@
                 clearTimeout(this.Loop); //清空定时器，防止重复注册定时器
             },
             labelDetails(id) {
+                //看看是不是子项菜单出现,出现的话就先隐藏菜单
+                if(this.showItemMenu != -1){
+                    this.showItemMenu = -1;
+                    return;
+                }
                 alert(id);
             },
             handleScroll() {
@@ -205,8 +210,8 @@
                     }
                 }, 10);
             },
-            addNote(){
-
+            handleRouterToAddNote(){
+                this.$router.push('/addNote');
             }
         }
     }
