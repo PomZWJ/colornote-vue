@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="position: relative;">
     <div class="edit-home">
       <div class="edit-bar">
         <div class="eb-icon eb-back-icon" :style="{backgroundImage: 'url('+backBtnIconUrl+')'}" @click="goBack"></div>
@@ -8,21 +8,32 @@
       </div>
     </div>
     <div class="note-mask">
-      <div class="nm-div">
-        <select>
-          <option>未分类</option>
-          <option>未分类</option>
-          <option>未分类</option>
-          <option>未分类</option>
-          <option>未分类</option>
-        </select>
+      <div class="nm-div-kind">
+        <div class="form_select">
+          <span style="display: flex;align-items:center;position:relative;width: 140px;" v-model="userName" @click="showAccountList($event)">
+            <span style="background-size: 100% 100%;background-repeat: no-repeat;position: absolute;left: 0;width: 30px;height: 30px;background-image: url('../../static/bookmark-black.png');display: inline-block"></span>
+            <span style="margin-left: 30px;color: black">未分类</span>
+            <span style="margin-left: 10px;background-size: 100% 100%;background-image: url('../../static/arrow-down.png');display: inline-block;width: 10px;height: 7px;" :class="hasClass==='1' ? 'openlist': (hasClass==='0'?'foldlist':'')" @click="showAccountList($event)"></span>
+          </span>
+          <ul class="nm-kind-ul" v-if="isShowUserList">
+            <li class="nm-kind-li" :class="{'selected':item.selected===true}" v-for="item in list" @click="changeUser(item)">
+              <span class="nm-kind-li-img" :style="{backgroundImage: 'url('+item.iconUrl+')'}"></span>
+              <span class="nm-kind-li-text">{{ item.name }}</span>
+            </li>
+            <li style="text-align: center;margin-top: 10px;color: #7071ff;line-height: 30px" @click="manageKind">管理分类</li>
+          </ul>
+        </div>
       </div>
-      <div class="nm-div time-div">
-        <span class="nm-div-time-span">{{currentTime}}</span>
+      <div class="nm-div-time">
+        <span style="font-size: 15px;" class="nm-div-time-span">{{currentTime}}</span>
       </div>
     </div>
-    <div style="position: fixed">
-      <textarea style="width: 100%;height: 100%"></textarea>
+    <div style="line-height: 500px">
+      <textarea style="max-width: 100%;max-height: 100%;border: none;padding: 0px;line-height: 100%"></textarea>
+    </div>
+    <div class="foot_menu">
+      <span style="margin: 0 auto;background-size: 100% 100%;background-repeat: no-repeat;width: 30px;height: 30px;background-image: url('../../static/footmenu/fav_icon_foot.png');display: inline-block"></span>
+      <span style="margin: 0 auto;background-size: 100% 100%;background-repeat: no-repeat;width: 30px;height: 30px;background-image: url('../../static/footmenu/delete_icon_foot.png');display: inline-block"></span>
     </div>
   </div>
 </template>
@@ -34,12 +45,60 @@
                 backBtnIconUrl: "../../static/back_btn.png",
                 completeBtnIconUrl: "../../static/complete_btn.png",
                 ebText: "编辑笔记",
-                currentTime: "2019年10月24日 11:58"
+                currentTime: "2019年10月24日 11:58",
+                list: [
+                    {
+                        name: '个人',
+                        value: 1,
+                        iconUrl:'../../static/bookmark/bookmark-blue.png'
+                    },
+                    {
+                        name: '旅游',
+                        value: 2,
+                        iconUrl:'../../static/bookmark/bookmark-red.png'
+                    },
+                    {
+                        name: '工作',
+                        value: 3,
+                        iconUrl:'../../static/bookmark/bookmark-yellow.png'
+                    },
+                    {
+                        name: '生活',
+                        value: 4,
+                        iconUrl:'../../static/bookmark/bookmark-green.png'
+                    },
+                ],
+                isShowUserList: false,
+                hasClass: ''
             }
         },
         methods: {
             goBack() {
                 this.$router.go(-1);
+            },
+            showAccountList(e) {
+                e.stopPropagation()
+                this.isShowUserList = !this.isShowUserList
+                if (this.isShowUserList) {
+                    this.hasClass = '1'
+                } else {
+                    this.hasClass = '0'
+                }
+            },
+            changeUser(data) {
+                this.list.map(item => {
+                    item.selected = false
+                    if (item.value === data.value) {
+                        item.selected = true
+                    }
+                })
+                this.hasClass = '0'
+                this.isShowUserList = false
+            },
+            manageKind(){
+                this.isShowUserList=false;
+                this.hasClass = '0'
+                alert("我是分类管理");
             }
         }
     }
@@ -80,16 +139,131 @@
     display: flex;
     align-items: center;
     position: relative;
+    background-color: white;
   }
-  .note-mask .nm-div{
-    display: inline-block
+  .note-mask .nm-div-kind{
+    display: inline-block;
   }
-  .note-mask .time-div{
+  .note-mask .nm-div-time{
+    display: inline-block;
     position: absolute;
     right: 0;
+    padding-right: 30px;
   }
-  .nm-div-time-span{
-    font-size: 15px !important;
-    color: rgba(128,128,128,0.49);
+  .note-mask .nm-div-time .nm-div-time-span{
+    color: rgba(128, 128, 128, 0.49);
   }
+  .foot_menu{
+    /*position: absolute;*/
+    height: 100px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    line-height: 60px;
+    bottom: 0px;
+    width: 100%;
+    background-color: white;
+  }
+</style>
+
+<!--下拉选框的样式-->
+<style scoped>
+  .form_select {
+    height: 35px;
+    display: inline-block;
+    width: 150px;
+    position: relative;
+    color: #aeaeae;
+  }
+  .nm-kind-ul {
+    width: 250px;
+    height: auto;
+    background-color: #fff;
+    border: 1px solid rgba(229, 221, 204, 0.22);
+    list-style: none;
+    padding: 10px;
+    position: absolute;
+    margin-top: 20px;
+  }
+  .nm-kind-li {
+    display: flex;
+    align-items: center;
+    height: 90px;
+    width: 100%;
+    margin-top: 20px;
+    line-height: 70px;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  }
+  /*li:hover {
+    background-color: #e6f7ff;
+    color: #737677;
+  }
+  li.selected {
+    background-color: #e6f7ff;
+    color: #737677;
+  }*/
+  .nm-kind-li-img{
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    display: inline-block;
+    margin-left: 40px;
+  }
+  .nm-kind-li-text{
+    margin-left: 120px;
+    font-size: larger;
+   }
+  /* 展开： */
+  .openlist {
+    -webkit-animation: open 0.3s linear forwards;
+    animation: open 0.3s linear forwards;
+  }
+
+  /* 收起： */
+  .foldlist {
+    -webkit-animation: fold 0.3s linear forwards;
+    animation: fold 0.3s linear forwards;
+  }
+
+  @-webkit-keyframes open {
+    from {
+      -webkit-transform: rotate(0deg);
+    }
+
+    to {
+      -webkit-transform: rotate(180deg);
+    }
+  }
+
+  @keyframes open {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(180deg);
+    }
+  }
+  @-webkit-keyframes fold {
+    from {
+      -webkit-transform: rotate(180deg);
+    }
+    to {
+      -webkit-transform: rotate(0deg);
+    }
+  }
+  @keyframes fold {
+    from {
+      transform: rotate(180deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
+
 </style>
