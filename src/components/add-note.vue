@@ -1,35 +1,35 @@
 <template>
-  <div style="position: relative;">
-    <div class="edit-home">
-      <div class="edit-bar">
-        <div class="eb-icon eb-back-icon" :style="{backgroundImage: 'url('+backBtnIconUrl+')'}" @click="goBack"></div>
-        <span style="font-size: 17px;margin-left: 17px;margin-top: 5px">{{ebText}}</span>
-        <div class="eb-icon eb-ok-icon" :style="{backgroundImage: 'url('+completeBtnIconUrl+')'}"></div>
+  <div style="position: relative">
+    <div style="width: 100%;position: fixed;bottom: 0px;top: 0px">
+      <div class="edit-home">
+        <div class="edit-bar">
+          <div class="eb-icon eb-back-icon" :style="{backgroundImage: 'url('+backBtnIconUrl+')'}" @click="goBack"></div>
+          <span style="font-size: 17px;margin-left: 17px;margin-top: 5px">{{ebText}}</span>
+          <div class="eb-icon eb-ok-icon" :style="{backgroundImage: 'url('+completeBtnIconUrl+')'}"></div>
+        </div>
       </div>
-    </div>
-    <div class="note-mask">
-      <div class="nm-div-kind">
-        <div class="form_select">
-          <span style="display: flex;align-items:center;position:relative;width: 140px;" v-model="userName" @click="showAccountList($event)">
+      <div class="note-mask">
+        <div class="nm-div-kind">
+          <div class="form_select">
+          <span style="display: flex;align-items:center;position:relative;width: 140px;" @click="showAccountList($event)">
             <span style="background-size: 100% 100%;background-repeat: no-repeat;position: absolute;left: 0;width: 30px;height: 30px;background-image: url('../../static/bookmark-black.png');display: inline-block"></span>
             <span style="margin-left: 30px;color: black">未分类</span>
             <span style="margin-left: 10px;background-size: 100% 100%;background-image: url('../../static/arrow-down.png');display: inline-block;width: 10px;height: 7px;" :class="hasClass==='1' ? 'openlist': (hasClass==='0'?'foldlist':'')" @click="showAccountList($event)"></span>
           </span>
-          <ul class="nm-kind-ul" v-if="isShowUserList">
-            <li class="nm-kind-li" :class="{'selected':item.selected===true}" v-for="item in list" @click="changeUser(item)">
-              <span class="nm-kind-li-img" :style="{backgroundImage: 'url('+item.iconUrl+')'}"></span>
-              <span class="nm-kind-li-text">{{ item.name }}</span>
-            </li>
-            <li style="text-align: center;margin-top: 10px;color: #7071ff;line-height: 30px" @click="manageKind">管理分类</li>
-          </ul>
+            <ul class="nm-kind-ul" v-if="isShowUserList">
+              <li class="nm-kind-li" :class="{'selected':item.selected===true}" v-for="item in list" @click="changeUser(item)">
+                <span class="nm-kind-li-img" :style="{backgroundImage: 'url('+item.iconUrl+')'}"></span>
+                <span class="nm-kind-li-text">{{ item.name }}</span>
+              </li>
+              <li style="text-align: center;margin-top: 10px;color: #7071ff;line-height: 30px" @click="manageKind">管理分类</li>
+            </ul>
+          </div>
+        </div>
+        <div class="nm-div-time">
+          <span style="font-size: 15px;" class="nm-div-time-span">{{currentTime}}</span>
         </div>
       </div>
-      <div class="nm-div-time">
-        <span style="font-size: 15px;" class="nm-div-time-span">{{currentTime}}</span>
-      </div>
-    </div>
-    <div style="line-height: 500px">
-      <textarea style="max-width: 100%;max-height: 100%;border: none;padding: 0px;line-height: 100%"></textarea>
+      <div contenteditable="true" style="width: 100%;height: 100%;border: none;outline:none;background-color: white;padding: 10px;font-size: 18px;overflow: scroll"></div>
     </div>
     <div class="foot_menu">
       <span style="margin: 0 auto;background-size: 100% 100%;background-repeat: no-repeat;width: 30px;height: 30px;background-image: url('../../static/footmenu/fav_icon_foot.png');display: inline-block"></span>
@@ -154,7 +154,7 @@
     color: rgba(128, 128, 128, 0.49);
   }
   .foot_menu{
-    /*position: absolute;*/
+    position: fixed;
     height: 100px;
     display: flex;
     align-items: center;
