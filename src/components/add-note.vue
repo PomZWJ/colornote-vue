@@ -1,6 +1,6 @@
 <template>
   <div style="position: relative">
-    <div style="width: 100%;position: fixed;bottom: 0px;top: 0px">
+    <div style="width: 100%;position: fixed;bottom: 0px;top: 0px;background-color: white">
       <div class="edit-home">
         <div class="edit-bar">
           <div class="eb-icon eb-back-icon" :style="{backgroundImage: 'url('+backBtnIconUrl+')'}" @click="goBack"></div>
@@ -21,7 +21,7 @@
                 <span class="nm-kind-li-img" :style="{backgroundImage: 'url('+item.iconUrl+')'}"></span>
                 <span class="nm-kind-li-text">{{ item.name }}</span>
               </li>
-              <li style="text-align: center;margin-top: 10px;color: #7071ff;line-height: 30px" @click="manageKind">管理分类</li>
+              <li style="text-align: center;margin-top: 10px;color: #7071ff;line-height: 30px;font-size: larger" @click="manageKind">新建</li>
             </ul>
           </div>
         </div>
@@ -29,11 +29,11 @@
           <span style="font-size: 15px;" class="nm-div-time-span">{{currentTime}}</span>
         </div>
       </div>
-      <div contenteditable="true" style="width: 100%;height: 100%;border: none;outline:none;background-color: white;padding: 10px;font-size: 18px;overflow: scroll"></div>
+      <div contenteditable="true" style="width: 100%;height: 75%;border: none;outline:none;background-color: white;padding: 10px;font-size: 18px;overflow: scroll;"></div>
     </div>
     <div class="foot_menu">
-      <span style="margin: 0 auto;background-size: 100% 100%;background-repeat: no-repeat;width: 30px;height: 30px;background-image: url('../../static/footmenu/fav_icon_foot.png');display: inline-block"></span>
-      <span style="margin: 0 auto;background-size: 100% 100%;background-repeat: no-repeat;width: 30px;height: 30px;background-image: url('../../static/footmenu/delete_icon_foot.png');display: inline-block"></span>
+      <span class="foot_menu_icon" style="background-image: url('../../static/footmenu/fav_icon_foot.png')"></span>
+      <span class="foot_menu_icon" style="background-image: url('../../static/footmenu/delete_icon_foot.png')"></span>
     </div>
   </div>
 </template>
@@ -163,6 +163,14 @@
     bottom: 0px;
     width: 100%;
     background-color: white;
+  }
+  .foot_menu_icon{
+    margin: 0 auto;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 60px;
+    height: 60px;
+    display: inline-block;
   }
 </style>
 
