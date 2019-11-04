@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div style="position: relative">
     <div style="width: 100%;position: fixed;bottom: 0px;top: 0px;background-color: white">
       <div class="edit-home">
@@ -35,6 +36,7 @@
       <span class="foot_menu_icon" style="background-image: url('../../static/footmenu/fav_icon_foot.png')"></span>
       <span class="foot_menu_icon" style="background-image: url('../../static/footmenu/delete_icon_foot.png')"></span>
     </div>
+  </div>
   </div>
 </template>
 
@@ -196,7 +198,7 @@
   .nm-kind-li {
     display: flex;
     align-items: center;
-    height: 90px;
+    height: 60px;
     width: 100%;
     margin-top: 20px;
     line-height: 70px;
@@ -218,8 +220,8 @@
     background-repeat: no-repeat;
     position: absolute;
     left: 0;
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     display: inline-block;
     margin-left: 40px;
   }
