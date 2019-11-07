@@ -52,22 +52,22 @@
                     {
                         name: '个人',
                         value: 1,
-                        iconUrl:'../../static/bookmark/bookmark-blue.png'
+                        iconUrl:'../../static/bookmark/bookmark-personal.png'
                     },
                     {
                         name: '旅游',
                         value: 2,
-                        iconUrl:'../../static/bookmark/bookmark-red.png'
+                        iconUrl:'../../static/bookmark/bookmark-work.png'
                     },
                     {
                         name: '工作',
                         value: 3,
-                        iconUrl:'../../static/bookmark/bookmark-yellow.png'
+                        iconUrl:'../../static/bookmark/bookmark-tourism.png'
                     },
                     {
                         name: '生活',
                         value: 4,
-                        iconUrl:'../../static/bookmark/bookmark-green.png'
+                        iconUrl:'../../static/bookmark/bookmark-life.png'
                     },
                 ],
                 isShowUserList: false,

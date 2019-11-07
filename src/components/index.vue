@@ -126,24 +126,24 @@
                 showItemMenu: -1,// -1代表都不显示
                 popupStyle: {},
                 sites: [
-                    {iconUrl: '../../static/bookmark/bookmark-blue.png', markText: '个人', markNum: '0', id: "1"},
-                    {iconUrl: '../../static/bookmark/bookmark-green.png', markText: '生活', markNum: '0', id: "2"},
-                    {iconUrl: '../../static/bookmark/bookmark-red.png', markText: '工作', markNum: '0', id: "3"},
-                    {iconUrl: '../../static/bookmark/bookmark-yellow.png', markText: '旅游', markNum: '0', id: "4"}
+                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "1"},
+                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "2"},
+                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "3"},
+                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "4"}
                 ],
                 bookNotes: [
-                    {iconUrl: '../../static/bookmark/bookmark-blue.png', markText: '个人', markNum: '0', id: "1"},
-                    {iconUrl: '../../static/bookmark/bookmark-green.png', markText: '生活', markNum: '0', id: "2"},
-                    {iconUrl: '../../static/bookmark/bookmark-red.png', markText: '工作', markNum: '0', id: "3"},
-                    {iconUrl: '../../static/bookmark/bookmark-yellow.png', markText: '旅游', markNum: '0', id: "4"},
-                    {iconUrl: '../../static/bookmark/bookmark-blue.png', markText: '个人', markNum: '0', id: "5"},
-                    {iconUrl: '../../static/bookmark/bookmark-green.png', markText: '生活', markNum: '0', id: "6"},
-                    {iconUrl: '../../static/bookmark/bookmark-red.png', markText: '工作', markNum: '0', id: "7"},
-                    {iconUrl: '../../static/bookmark/bookmark-yellow.png', markText: '旅游', markNum: '0', id: "8"},
-                    {iconUrl: '../../static/bookmark/bookmark-blue.png', markText: '个人', markNum: '0', id: "9"},
-                    {iconUrl: '../../static/bookmark/bookmark-green.png', markText: '生活', markNum: '0', id: "10"},
-                    {iconUrl: '../../static/bookmark/bookmark-red.png', markText: '工作', markNum: '0', id: "11"},
-                    {iconUrl: '../../static/bookmark/bookmark-yellow.png', markText: '旅游', markNum: '0', id: "12"}
+                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "1"},
+                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "2"},
+                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "3"},
+                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "4"},
+                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "5"},
+                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "6"},
+                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "7"},
+                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "8"},
+                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "9"},
+                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "10"},
+                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "11"},
+                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "12"}
                 ],
                 timeOutEvent: 0,
                 Loop: null,
