@@ -54,9 +54,9 @@
         <img v-bind:src="closeIconUrl" style="position: absolute;width: 15px;height: 15px;top: 20px;right: 20px;" @click="cancelPopWin">
         <div class="popup-left">
           <div style="margin-left:-10px;margin-top: 20px;text-align: center">
-            <img v-bind:src="iconUrl" style="width: 50px;height: 50px"/>
+            <img v-bind:src="userIconLogo" style="width: 50px;height: 50px"/>
             <div>
-              <span style="font-weight: bolder;font-size: x-large;">色彩笔记</span>
+              <span style="font-weight: bolder;font-size: x-large;">{{userIdText}}</span>
             </div>
           </div>
           <div style="margin-left:-10px;padding-left: 30px;background-color: white">
@@ -116,21 +116,18 @@
                 favYesOrNoIconUrl: "../../static/fav_no.png",
                 deleteIconUrl: "../../static/delete_icon.png",
                 goTopIconUrl: "../../static/go_top_icon.png",
+                userIconLogo: "../../static/user-logo.png",
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
                 allNoteText: "全部笔记",
                 favoriteText: "我的收藏",
                 rubbishText: "最近删除",
+                userIdText: '色彩笔记',
                 show: false,
                 showItemMenu: -1,// -1代表都不显示
                 popupStyle: {},
-                sites: [
-                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "1"},
-                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "2"},
-                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "3"},
-                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "4"}
-                ],
+                sites: "",
                 bookNotes: [
                     {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "1"},
                     {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "2"},
@@ -152,6 +149,50 @@
         },
         mounted () {
             window.addEventListener('scroll', this.handleScroll,true);
+        },
+        created(){
+            let _this = this;
+            this.$axios({
+                method:'post',
+                url:'http://gtaa3g.natappfree.cc/ColorNote/user/getCurrentLoginUserInfo',
+                data:this.qs.stringify({
+                    userId:'912094062@qq.com',
+                    token:'P+K09nlcpw+US3gt/4Od2JApnyw2lYz1r7OUh8WbPnkK63JGhkmWGfMF8NPFl5iXAnO7hRIVR1O6C86DWiBjseAROZWRb3xmfuNIK/R4GK68LgPQJ3qxXQ+hGnXbs8no1jv1H/RB+Rk/QcISVEw1CR4XOPCrNzVZQ/VTQu2dUGMan9QlLLaam/Cfhs2Zx5xwzt7UqhhEzKF6T2NVu+XBzYHesV1cQ8LgqRTeQlIekm3rZVfbkjWX3bE6MqzpFqEh2SB+kLM8cDuCNzgIWp5BkoHivAUXK9SkMxMJkyRShkXbZvJbtu7DDIH8dtj+6bfTj7C9TFEcZWBFN8oZl/1YcA=='
+                }),
+            }).then((response)=>{
+                let data = response.data;
+                if(data.resultCode!='000000'){
+                    alert(data.resultMsg);
+                }else{
+                    let user = data.params.user;
+                    this.userIdText = user.userName;
+                }
+            }).catch((error)=>{
+                alert(error);
+            });
+
+            this.$axios({
+                method:'post',
+                url:'http://gtaa3g.natappfree.cc/ColorNote/user/getUserIndexInfo',
+                data:this.qs.stringify({
+                    userId:'912094062@qq.com'
+                }),
+            }).then((response)=>{
+                let data = response.data;
+                if(data.resultCode!='000000'){
+                    alert(data.resultMsg);
+                }else{
+                    let params = data.params;
+                    _this.allNoteNum = params.allNote;
+                    _this.favoriteNum = params.myFav;
+                    _this.rubbishNum = params.nearDel;
+                    //console.log(noteKinds);
+                    _this.sites = params.noteKind;
+
+                }
+            }).catch((error)=>{
+                alert(error);
+            });
         },
         methods: {
             //取消弹窗
