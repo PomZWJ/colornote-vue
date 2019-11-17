@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import index from '@/components/index'
-import addNote from '@/components/add-note'
+import index from '@/page/index'
+import addNote from '@/page/add-note'
 
 
 Vue.use(Router);

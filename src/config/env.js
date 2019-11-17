@@ -4,17 +4,17 @@
  * routerMode 路由模式
  * imgBaseUrl 图片所在的域名地址
  */
-let baseUrl = '';
+let baseUrl = 'http://vzdn.natapp1.cc/ColorNote/';
 let routerMode = 'hash';
-let imgBaseUrl = '';
+let imgBaseUrl = '../../static/';
 
 
-if(progress.env.NODE_ENV == 'development') {
+/*if(progress.env.NODE_ENV == 'development') {
   imgBaseUrl = '/img';
 }else if(progress.env.NODE_ENV == 'production'){
   baseUrl = 'http://vzdn.natapp1.cc/ColorNote/'
   imgBaseUrl = "http://vzdn.natapp1.cc/ColorNote/";
-}
+}*/
 export {
   baseUrl,
   routerMode,

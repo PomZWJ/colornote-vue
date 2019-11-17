@@ -100,25 +100,27 @@
 
 </template>
 <script>
-    import {imgBaseUrl} from 'src/config/env'
-    import {getD1} from 'src/service/getData'
+    import {imgBaseUrl} from '@/config/env'
+    import {getAllNote} from '@/service/getData'
+    import {getUserInfo} from '@/service/getData'
+    import {getUserIndexInfo} from '@/service/getData'
     export default {
         data() {
             return {
-                iconUrl: "../../static/logo.ico",
-                noteIconUrl: "../../static/note.png",
-                favIconUrl: "../../static/fav.png",
-                rubbishIconUrl: "../../static/rubbish.png",
-                closeIconUrl: "../../static/close_icon.png",
-                editMarkIconUrl: "../../static/edit-bookmark.png",
-                setIconUrl: "../../static/set_icon.png",
-                menuIconUrl: "../../static/menu_icon.png",
-                searchIconUrl: "../../static/search_icon.png",
-                copyIconUrl: "../../static/copy_icon.png",
-                favYesOrNoIconUrl: "../../static/fav_no.png",
-                deleteIconUrl: "../../static/delete_icon.png",
-                goTopIconUrl: "../../static/go_top_icon.png",
-                userIconLogo: "../../static/user-logo.png",
+                iconUrl: imgBaseUrl+"/logo.ico",
+                noteIconUrl: imgBaseUrl+"/note.png",
+                favIconUrl: imgBaseUrl+"/fav.png",
+                rubbishIconUrl: imgBaseUrl+"/rubbish.png",
+                closeIconUrl: imgBaseUrl+"/close_icon.png",
+                editMarkIconUrl: imgBaseUrl+"/edit-bookmark.png",
+                setIconUrl: imgBaseUrl+"/set_icon.png",
+                menuIconUrl: imgBaseUrl+"/menu_icon.png",
+                searchIconUrl: imgBaseUrl+"/search_icon.png",
+                copyIconUrl: imgBaseUrl+"/copy_icon.png",
+                favYesOrNoIconUrl: imgBaseUrl+"/fav_no.png",
+                deleteIconUrl: imgBaseUrl+"/delete_icon.png",
+                goTopIconUrl: imgBaseUrl+"/go_top_icon.png",
+                userIconLogo: imgBaseUrl+"/user-logo.png",
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
@@ -138,71 +140,7 @@
         },
         mounted () {
             window.addEventListener('scroll', this.handleScroll,true);
-        },
-        created(){
-            let _this = this;
-            this.$axios({
-                method:'post',
-                url:'http://vzdn.natapp1.cc/ColorNote/user/getCurrentLoginUserInfo',
-                data:this.qs.stringify({
-                    userId:'912094062@qq.com',
-                    token:'P+K09nlcpw+US3gt/4Od2JApnyw2lYz1r7OUh8WbPnkK63JGhkmWGfMF8NPFl5iXAnO7hRIVR1O6C86DWiBjseAROZWRb3xmfuNIK/R4GK68LgPQJ3qxXQ+hGnXbs8no1jv1H/RB+Rk/QcISVEw1CR4XOPCrNzVZQ/VTQu2dUGMan9QlLLaam/Cfhs2Zx5xwzt7UqhhEzKF6T2NVu+XBzYHesV1cQ8LgqRTeQlIekm3rZVfbkjWX3bE6MqzpFqEh2SB+kLM8cDuCNzgIWp5BkoHivAUXK9SkMxMJkyRShkXbZvJbtu7DDIH8dtj+6bfTj7C9TFEcZWBFN8oZl/1YcA=='
-                }),
-            }).then((response)=>{
-                let data = response.data;
-                if(data.resultCode!='000000'){
-                    alert(data.resultMsg);
-                }else{
-                    let user = data.params.user;
-                    this.userIdText = user.userName;
-                }
-            }).catch((error)=>{
-                alert(error);
-            });
-
-            this.$axios({
-                method:'post',
-                url:'http://vzdn.natapp1.cc/ColorNote/user/getUserIndexInfo',
-                data:this.qs.stringify({
-                    userId:'912094062@qq.com'
-                }),
-            }).then((response)=>{
-                let data = response.data;
-                if(data.resultCode!='000000'){
-                    alert(data.resultMsg);
-                }else{
-                    let params = data.params;
-                    _this.allNoteNum = params.allNote;
-                    _this.favoriteNum = params.myFav;
-                    _this.rubbishNum = params.nearDel;
-                    //console.log(noteKinds);
-                    _this.sites = params.noteKind;
-
-                }
-            }).catch((error)=>{
-                alert(error);
-            });
-
-
-            this.$axios({
-                method:'post',
-                url:'http://vzdn.natapp1.cc/ColorNote/note/getAllNoteInfo',
-                data:this.qs.stringify({
-                    userId:'912094062@qq.com'
-                }),
-            }).then((response)=>{
-                let data = response.data;
-                if(data.resultCode!='000000'){
-                    alert(data.resultMsg);
-                }else{
-                    _this.bookNotes = data.params;
-
-                }
-            }).catch((error)=>{
-                alert(error);
-            });
-
-
+            this.initData();
         },
         methods: {
             //取消弹窗
@@ -264,9 +202,16 @@
             handleRouterToAddNote(){
                 this.$router.push('/addNote');
             },
-            async loadNote(){
-                let res = await getD1("912094062@qq.com");
-                alert(res);
+            async initData(){
+                this.bookNotes = await getAllNote("912094062@qq.com");
+                let userInfo = await getUserInfo("912094062@qq.com","P+K09nlcpw+US3gt/4Od2JApnyw2lYz1r7OUh8WbPnkK63JGhkmWGfMF8NPFl5iXAnO7hRIVR1O6C86DWiBjseAROZWRb3xmfuNIK/R4GK68LgPQJ3qxXQ+hGnXbs8no1jv1H/RB+Rk/QcISVEw1CR4XOPCrNzVZQ/VTQu2dUGMan9QlLLaam/Cfhs2Zx5xwzt7UqhhEzKF6T2NVu+XBzYHesV1cQ8LgqRTeQlIekm3rZVfbkjWX3bE6MqzpFqEh2SB+kLM8cDuCNzgIWp5BkoHivAUXK9SkMxMJkyRShkXbZvJbtu7DDIH8dtj+6bfTj7C9TFEcZWBFN8oZl/1YcA==");
+                this.userIdText = userInfo.user.userName;
+                let userIndexInfo = await getUserIndexInfo("912094062@qq.com");
+                this.allNoteNum = userIndexInfo.allNote;
+                this.favoriteNum = userIndexInfo.myFav;
+                this.rubbishNum = userIndexInfo.nearDel;
+                this.sites = userIndexInfo.noteKind;
+
             }
         }
     }
