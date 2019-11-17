@@ -18,14 +18,14 @@
           <div class="cn-item-li">
             <div class="cn-item-main" style="border:1px solid rgba(25,137,250,0.26);">
               <div class="cn-item-text">
-                <span style="font-size: 18px">闽南师范大学--www.mnnu.com</span>
+                <span style="font-size: 18px">{{site.noteContent}}</span>
               </div>
               <div class="cn-item-time">
-                <span style="font-size: larger;color: #bdbdbd">2019-10-22 14:14:20</span>
+                <span style="font-size: larger;color: #bdbdbd">{{site.noteTime}}</span>
               </div>
             </div>
             <!--给文字加上一层遮罩(防止文字被选择)-->
-            <div class="cn-item-mask" @click="labelDetails(site.id)"></div>
+            <div class="cn-item-mask" @click="labelDetails(site.noteId)"></div>
             <!--每个条目的菜单栏(长按item弹出)-->
             <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
               <div class="cn-item-menu" @click="cancelItemMenu" style="border:1px solid rgba(25,137,250,0.26);" v-if="showItemMenu == index">
@@ -56,7 +56,7 @@
           <div style="margin-left:-10px;margin-top: 20px;text-align: center">
             <img v-bind:src="userIconLogo" style="width: 50px;height: 50px"/>
             <div>
-              <span style="font-weight: bolder;font-size: x-large;">{{userIdText}}</span>
+              <span style="font-weight: bolder;font-size: large;">{{userIdText}}</span>
             </div>
           </div>
           <div style="margin-left:-10px;padding-left: 30px;background-color: white">
@@ -100,6 +100,8 @@
 
 </template>
 <script>
+    import {imgBaseUrl} from 'src/config/env'
+    import {getD1} from 'src/service/getData'
     export default {
         data() {
             return {
@@ -128,20 +130,7 @@
                 showItemMenu: -1,// -1代表都不显示
                 popupStyle: {},
                 sites: "",
-                bookNotes: [
-                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "1"},
-                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "2"},
-                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "3"},
-                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "4"},
-                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "5"},
-                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "6"},
-                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "7"},
-                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "8"},
-                    {iconUrl: '../../static/bookmark/bookmark-personal.png', markText: '个人', markNum: '0', id: "9"},
-                    {iconUrl: '../../static/bookmark/bookmark-life.png', markText: '生活', markNum: '0', id: "10"},
-                    {iconUrl: '../../static/bookmark/bookmark-work.png', markText: '工作', markNum: '0', id: "11"},
-                    {iconUrl: '../../static/bookmark/bookmark-tourism.png', markText: '旅游', markNum: '0', id: "12"}
-                ],
+                bookNotes: "",
                 timeOutEvent: 0,
                 Loop: null,
                 goTop:false
@@ -154,7 +143,7 @@
             let _this = this;
             this.$axios({
                 method:'post',
-                url:'http://gtaa3g.natappfree.cc/ColorNote/user/getCurrentLoginUserInfo',
+                url:'http://vzdn.natapp1.cc/ColorNote/user/getCurrentLoginUserInfo',
                 data:this.qs.stringify({
                     userId:'912094062@qq.com',
                     token:'P+K09nlcpw+US3gt/4Od2JApnyw2lYz1r7OUh8WbPnkK63JGhkmWGfMF8NPFl5iXAnO7hRIVR1O6C86DWiBjseAROZWRb3xmfuNIK/R4GK68LgPQJ3qxXQ+hGnXbs8no1jv1H/RB+Rk/QcISVEw1CR4XOPCrNzVZQ/VTQu2dUGMan9QlLLaam/Cfhs2Zx5xwzt7UqhhEzKF6T2NVu+XBzYHesV1cQ8LgqRTeQlIekm3rZVfbkjWX3bE6MqzpFqEh2SB+kLM8cDuCNzgIWp5BkoHivAUXK9SkMxMJkyRShkXbZvJbtu7DDIH8dtj+6bfTj7C9TFEcZWBFN8oZl/1YcA=='
@@ -173,7 +162,7 @@
 
             this.$axios({
                 method:'post',
-                url:'http://gtaa3g.natappfree.cc/ColorNote/user/getUserIndexInfo',
+                url:'http://vzdn.natapp1.cc/ColorNote/user/getUserIndexInfo',
                 data:this.qs.stringify({
                     userId:'912094062@qq.com'
                 }),
@@ -193,6 +182,27 @@
             }).catch((error)=>{
                 alert(error);
             });
+
+
+            this.$axios({
+                method:'post',
+                url:'http://vzdn.natapp1.cc/ColorNote/note/getAllNoteInfo',
+                data:this.qs.stringify({
+                    userId:'912094062@qq.com'
+                }),
+            }).then((response)=>{
+                let data = response.data;
+                if(data.resultCode!='000000'){
+                    alert(data.resultMsg);
+                }else{
+                    _this.bookNotes = data.params;
+
+                }
+            }).catch((error)=>{
+                alert(error);
+            });
+
+
         },
         methods: {
             //取消弹窗
@@ -253,6 +263,10 @@
             },
             handleRouterToAddNote(){
                 this.$router.push('/addNote');
+            },
+            async loadNote(){
+                let res = await getD1("912094062@qq.com");
+                alert(res);
             }
         }
     }
