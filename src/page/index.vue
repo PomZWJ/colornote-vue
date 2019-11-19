@@ -203,10 +203,10 @@
                 this.$router.push('/addNote');
             },
             async initData(){
-                this.bookNotes = await getAllNote("912094062@qq.com");
-                let userInfo = await getUserInfo("912094062@qq.com","P+K09nlcpw+US3gt/4Od2JApnyw2lYz1r7OUh8WbPnkK63JGhkmWGfMF8NPFl5iXAnO7hRIVR1O6C86DWiBjseAROZWRb3xmfuNIK/R4GK68LgPQJ3qxXQ+hGnXbs8no1jv1H/RB+Rk/QcISVEw1CR4XOPCrNzVZQ/VTQu2dUGMan9QlLLaam/Cfhs2Zx5xwzt7UqhhEzKF6T2NVu+XBzYHesV1cQ8LgqRTeQlIekm3rZVfbkjWX3bE6MqzpFqEh2SB+kLM8cDuCNzgIWp5BkoHivAUXK9SkMxMJkyRShkXbZvJbtu7DDIH8dtj+6bfTj7C9TFEcZWBFN8oZl/1YcA==");
+                this.bookNotes = await getAllNote();
+                let userInfo = await getUserInfo();
                 this.userIdText = userInfo.user.userName;
-                let userIndexInfo = await getUserIndexInfo("912094062@qq.com");
+                let userIndexInfo = await getUserIndexInfo();
                 this.allNoteNum = userIndexInfo.allNote;
                 this.favoriteNum = userIndexInfo.myFav;
                 this.rubbishNum = userIndexInfo.nearDel;
