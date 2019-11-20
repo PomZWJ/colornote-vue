@@ -178,7 +178,15 @@
                     this.showItemMenu = -1;
                     return;
                 }
-                alert(id);
+                let _id = id;
+                this.$router.push({
+                    path: '/addNote',
+                    query: {
+                        action: 'edit',
+                        noteId: _id
+                    }
+                });
+
             },
             handleScroll() {
                 let scrollTop = Math.max(document.body.scrollTop,document.documentElement.scrollTop);
@@ -200,7 +208,12 @@
                 }, 10);
             },
             handleRouterToAddNote(){
-                this.$router.push('/addNote');
+                this.$router.push({
+                    path: '/addNote',
+                    query: {
+
+                    }
+                });
             },
             async initData(){
                 this.bookNotes = await getAllNote();

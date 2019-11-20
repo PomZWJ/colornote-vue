@@ -49,3 +49,43 @@ export const addUserNoteInfo = (noteKindId,noteContent,noteTime)=>{
   let response = fetch('/note/addUserNoteInfo',data);
   return response;
 }
+
+export const getUserNoteByNoteId = (noteId)=>{
+  let data = {
+    "userId": userId,
+    "noteId": noteId
+  }
+  let response = fetch('/note/getUserNoteByNoteId',data);
+  return response;
+}
+
+export const updateNoteFavState = (noteId,favState)=>{
+  let data = {
+    "userId": userId,
+    "noteId": noteId,
+    "favState": favState
+  }
+  let response = fetch('/note/updateNoteFavState',data);
+  return response;
+}
+
+export const deleteNoteToRubbishByUserIdAndNoteId = (noteId)=>{
+  let data = {
+    "userId": userId,
+    "noteId": noteId
+  }
+  let response = fetch('/note/deleteNoteToRubbishByUserIdAndNoteId',data);
+  return response;
+}
+
+export const updateUserNoteInfo = (noteId,noteKindId,noteContent,noteTime)=>{
+  let data = {
+    "userId": userId,
+    "noteId": noteId,
+    "noteKindId": noteKindId,
+    "noteContent": noteContent,
+    "noteTime": noteTime
+  }
+  let response = fetch('/note/updateUserNoteInfo',data);
+  return response;
+}

@@ -33,11 +33,16 @@
       <div v-html="noteContent" @input="onDivInput($event)"  contenteditable="true" style="width: 100%;height: 75%;border: none;outline:none;background-color: white;padding: 10px;font-size: 18px;overflow: scroll;"></div>
     </div>
     <div class="foot_menu">
-      <span class="foot_menu_icon" style="background-image: url('../../static/footmenu/fav_icon_foot.png')"></span>
-      <span class="foot_menu_icon" style="background-image: url('../../static/footmenu/delete_icon_foot.png')"></span>
+      <span @click="updateNoteFavState" class="foot_menu_icon" :style="{backgroundImage: 'url('+favBtnIconUrl+')'}"></span>
+      <span @click="deleteNote" class="foot_menu_icon" :style="{backgroundImage: 'url('+delBtnIconUrl+')'}"></span>
     </div>
     <span style="display: none">{{selectNoteKindText}}</span>
+    <span style="display: none">{{favState}}</span>
   </div>
+    <transition name="loading">
+      <loading v-show="showLoading"></loading>
+    </transition>
+    <alert-tip v-if="showAlert" @autoClose="showAlert=false" :alertText="alertText"></alert-tip>
   </div>
 </template>
 
@@ -46,26 +51,58 @@
     import {getSystemCurrentTime} from '@/service/getData'
     import {getAllNoteKindByUserId} from '@/service/getData'
     import {addUserNoteInfo} from '@/service/getData'
+    import {getUserNoteByNoteId} from '@/service/getData'
+    import {updateNoteFavState} from '@/service/getData'
+    import {deleteNoteToRubbishByUserIdAndNoteId} from '@/service/getData'
+    import {updateUserNoteInfo} from '@/service/getData'
+    import loading from '@/components/loading'
+    import alertTip from '@/components/alertTip'
     export default {
         data() {
             return {
                 backBtnIconUrl: imgBaseUrl+"/back_btn.png",
                 completeBtnIconUrl: imgBaseUrl+"/complete_btn.png",
                 defaultKindIconUrl: imgBaseUrl+'/bookmark/bookmark-black.png',
-                ebText: "编辑笔记",
+                favBtnIconUrl: imgBaseUrl+"/footmenu/fav_icon_foot.png",
+                delBtnIconUrl: imgBaseUrl+"/footmenu/delete_icon_foot.png",
+                ebText: "",
                 defaultKindText: "未分类",
                 currentTime: "",
                 list: '',
                 isShowUserList: false,
                 hasClass: '',
                 selectNoteKindText: '',
-                noteContent: ''
+                noteContent: ' ',
+                favState: '0',
+                showLoading: true,
+                alertText: '', //提示的内容
+                showAlert: false
             }
+        },
+        components:{
+          loading, alertTip
         },
         mounted () {
             this.initData();
         },
+        created(){
+          this.getParams();
+        },
         methods: {
+            getParams(){
+                const noteId = this.$route.query.noteId;
+                const action = this.$route.query.action;
+                if(action == 'edit'){
+                    this.ebText = "编辑笔记";
+                    if(noteId == undefined || undefined == ''){
+                        alert("笔记不存在");
+                    }else{
+                        this.getNoteInfo(noteId);
+                    }
+                }else{
+                    this.ebText = "新增笔记";
+                }
+            },
             goBack() {
                 this.$router.go(-1);
             },
@@ -94,22 +131,83 @@
             manageKind(){
                 this.isShowUserList=false;
                 this.hasClass = '0'
-                alert("我是分类管理");
+                this.showAlertTip("我是分类管理");
             },
             async submitNote(){
-              //alert(this.selectNoteKindText+"==="+this.noteContent+"==="+this.currentTime);
-              let flag = await addUserNoteInfo(this.selectNoteKindText,this.noteContent,this.currentTime);
-              if(flag == true){
-                  alert("插入成功");
-                  this.$router.go(-1);
-              }
+                this.currentTime = await getSystemCurrentTime();
+                const noteId = this.$route.query.noteId;
+                const action = this.$route.query.action;
+                if(action == 'edit'){
+                    let flag = await updateUserNoteInfo(noteId,this.selectNoteKindText,this.noteContent,this.currentTime);
+                    if(flag == true){
+                        this.showAlertTip("更新成功");
+                        //this.$router.go(-1);
+                    }
+                }else{
+                    let flag = await addUserNoteInfo(this.selectNoteKindText,this.noteContent,this.currentTime);
+                    if(flag == true){
+                        this.showAlertTip("插入成功");
+                        //this.$router.go(-1);
+                    }
+                }
             },
             onDivInput(e){
                 this.noteContent = e.target.innerText;
             },
             async initData(){
-                this.currentTime = await getSystemCurrentTime();
+                const action = this.$route.query.action;
+                if(action != 'edit'){
+                    this.currentTime = await getSystemCurrentTime();
+                }
+
                 this.list = await getAllNoteKindByUserId();
+                this.showLoading = false;
+            },
+            async getNoteInfo(noteId){
+                let myNote = await getUserNoteByNoteId(noteId);
+                this.noteContent = myNote.noteContent;
+                this.currentTime = myNote.noteTime;
+                this.selectNoteKindText = myNote.noteKindId;
+                if(myNote.kindIconUrl!=undefined&&myNote.kindIconUrl!=''){
+                    this.defaultKindIconUrl = imgBaseUrl+"/bookmark/"+myNote.kindIconUrl;
+                }
+                if(myNote.noteKindName!=undefined&&myNote.noteKindName!=''){
+                    this.defaultKindText = myNote.noteKindName;
+                }
+                if(myNote.isFav!=undefined&&myNote.isFav!=''&&myNote.isFav=='1'){
+                    this.favState = '1';
+                    this.favBtnIconUrl = imgBaseUrl+"/footmenu/fav_yes_icon_foot.png";
+                }
+            },
+            async updateNoteFavState(){
+                const noteId = this.$route.query.noteId;
+                if(this.favState == '1'){
+                    this.favState = '0';
+                }else{
+                    this.favState = '1';
+                }
+                let flag = await updateNoteFavState(noteId,this.favState);
+                if(flag == true){
+                    if(this.favState == '0'){
+                        this.favBtnIconUrl = imgBaseUrl+"/footmenu/fav_icon_foot.png";
+                        this.showAlertTip("取消收藏成功");
+                    }else{
+                        this.favBtnIconUrl = imgBaseUrl+"/footmenu/fav_yes_icon_foot.png";
+                        this.showAlertTip("收藏成功");
+                    }
+                }
+            },
+            async deleteNote(){
+                const noteId = this.$route.query.noteId;
+                let flag = await deleteNoteToRubbishByUserIdAndNoteId(noteId);
+                if(flag == true){
+                    this.showAlertTip("删除成功");
+                    this.$router.go(-1);
+                }
+            },
+            showAlertTip(text){
+                this.showAlert = true;
+                this.alertText = text;
             }
         }
     }
