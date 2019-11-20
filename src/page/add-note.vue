@@ -134,6 +134,10 @@
                 this.showAlertTip("我是分类管理");
             },
             async submitNote(){
+                if(this.noteContent.trim()==''){
+                    this.showAlertTip("笔记内容不能为空");
+                    return ;
+                }
                 this.currentTime = await getSystemCurrentTime();
                 const noteId = this.$route.query.noteId;
                 const action = this.$route.query.action;
@@ -180,7 +184,13 @@
                 }
             },
             async updateNoteFavState(){
+                const action = this.$route.query.action;
                 const noteId = this.$route.query.noteId;
+                if(action!='edit'){
+                    this.showAlertTip("请先保存当前笔记");
+                    return ;
+                }
+
                 if(this.favState == '1'){
                     this.favState = '0';
                 }else{
@@ -198,7 +208,12 @@
                 }
             },
             async deleteNote(){
+                const action = this.$route.query.action;
                 const noteId = this.$route.query.noteId;
+                if(action!='edit'){
+                    this.showAlertTip("请先保存当前笔记");
+                    return ;
+                }
                 let flag = await deleteNoteToRubbishByUserIdAndNoteId(noteId);
                 if(flag == true){
                     this.showAlertTip("删除成功");
