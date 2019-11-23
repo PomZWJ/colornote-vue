@@ -41,17 +41,21 @@
               showPop: true,
               showSelectDiv: false,
               newNoteKindContent:'',
-              hiddenNoteKindId: ''
+              hiddenNoteKindId: 'bookmark-red.png'
           }
       },
       methods:{
           cancelPop(){
               this.showPop = false;
+              this.newNoteKindContent='';
+              this.hiddenNoteKindId='bookmark-red.png';
+              this.kindIconUrl=imgBaseUrl+'/bookmark/bookmark-red.png';
               this.$emit('autoClose');
           },
           async submitEvent(){
               this.bookNotes = await updateNoteKind(this.newNoteKindContent,this.hiddenNoteKindId);
               this.cancelPop();
+              this.$emit('autoRefresh');
           },
           showNoteKindColor(){
               this.showSelectDiv = true;

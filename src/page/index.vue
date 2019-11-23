@@ -107,7 +107,7 @@
       </div>
     </transition>
     <transition name="addNoteKindPop">
-      <addNoteKindPop @autoClose="showNewNoteKindPopWin=false" v-show="showNewNoteKindPopWin"></addNoteKindPop>
+      <addNoteKindPop @autoRefresh="initData" @autoClose="showNewNoteKindPopWin=false" v-show="showNewNoteKindPopWin"></addNoteKindPop>
     </transition>
   </div>
 
