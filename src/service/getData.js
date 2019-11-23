@@ -1,6 +1,6 @@
 import fetch from '../config/fetch'
 let userId = "912094062@qq.com";
-let token = "LDdN6skcX8+7wlAD/JEiwCwAPG4ADbj5XTgcNFF+e0mUHKHrAFUkwgaclB68z46YvOvUqlT0bZXPud22Rybu+ARimZmzKu9EgnVm0igHI2hdFTbpDrKcPMdBI/1u6muwVANOwkrZr8231uxpf3A0k5I9yRV5bA9PsW0+PQm4hC+rvWPdOYWvP4x7LVizsETk9DS8Ql9bTu6CQsFyopeeRjFOWVDc9vJivQi2GsZvnEKWPo9851B0UTpes8vOCKpn9Crhwc+9a7mv5xT69Y1nIEikgzVp34a5/FRegsOCCaNYOU1TaZbZ7pFKVhyn0JLEaq4ZEQZveK6UeFtDP1U2gQ==";
+let token = "BGJzSe3tuLHmyMWgrNDFZZPn3BeFguhEGuOIc7EVxAsNjRVrpZ6EDttvK9f0P1VGPDYdqtFk4lWzitFnDNO5SvrgmmJIHpV1OUORLRx1so8WBJ6PMavkmxuxUECtzDTC5191DX+yEV4/ZBdRge+6mjBSO7Gu4Bw0pwlra614jvUubaxkBeJZBuxoxu5RUyZ2tq6UQ5eWvxmwSehkZV2y+AtynlZhzGUlRPYR1FcpTdRGOLXYBYIQJSSYAQd6hktgX/gTW0soAfqcGMdwnCvRkSY5DaX/mVCvFAoGosrFm4g2+nIgrBld5z/PtwdAvR3THlxrQNjvUfd05yRzwlfQ4g==";
 export const getAllNote = ()=>{
   let data = {
     "userId":userId
@@ -87,5 +87,15 @@ export const updateUserNoteInfo = (noteId,noteKindId,noteContent,noteTime)=>{
     "noteTime": noteTime
   }
   let response = fetch('/note/updateUserNoteInfo',data);
+  return response;
+}
+
+export const updateNoteKind = (noteKindName,noteKindUrl)=>{
+  let data = {
+    "userId": userId,
+    "noteKindName": noteKindName,
+    "noteKindUrl": noteKindUrl
+  }
+  let response = fetch('/noteKind/updateNoteKind',data);
   return response;
 }

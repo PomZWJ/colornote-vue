@@ -42,7 +42,9 @@
     <transition name="loading">
       <loading v-show="showLoading"></loading>
     </transition>
-    <alert-tip v-if="showAlert" @autoClose="showAlert=false" :alertText="alertText"></alert-tip>
+    <transition mode="out-in" leave-active-class="animated zoomOut">
+      <alert-tip v-if="showAlert" @autoClose="showAlert=false" :alertText="alertText"></alert-tip>
+    </transition>
   </div>
 </template>
 

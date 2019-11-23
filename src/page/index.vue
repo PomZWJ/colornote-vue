@@ -9,7 +9,7 @@
         <!--bar title-->
         <span style="font-size: 20px;margin-left: 10px">全部笔记</span>
         <!--搜索图标-->
-        <img   v-bind:src="searchIconUrl" style="width: 30px;height: 30px;position: absolute;right: 10px;"/>
+        <img v-bind:src="searchIconUrl" style="width: 30px;height: 30px;position: absolute;right: 10px;"/>
       </div>
       <div>
       <!--笔记条目(使用v-for循环)-->
@@ -87,6 +87,17 @@
                 <span class="line-num">{{site.markNum}}</span>
               </div>
             </div>
+
+            <div class="line-box">
+              <img class="line-icon" v-bind:src="noNoteKindIconUrl">
+              <span class="line-text">未分类</span>
+              <span class="line-num">{{noNoteKindNum}}</span>
+            </div>
+            <div class="line-box">
+              <img class="line-icon" v-bind:src="newNoteKindIconUrl">
+              <span @click="popNewNoteKindWin" class="line-text" style="color: rgb(45, 168, 199)">新建</span>
+            </div>
+
             <div class="line-box" style="padding-bottom: 30px;background-color: white">
               <img class="line-icon" v-bind:src="setIconUrl">
               <span class="line-text">设置</span>
@@ -95,15 +106,21 @@
         </div>
       </div>
     </transition>
+    <transition name="addNoteKindPop">
+      <addNoteKindPop @autoClose="showNewNoteKindPopWin=false" v-show="showNewNoteKindPopWin"></addNoteKindPop>
+    </transition>
   </div>
 
 
 </template>
 <script>
     import {imgBaseUrl} from '@/config/env'
-    import {getAllNote} from '@/service/getData'
-    import {getUserInfo} from '@/service/getData'
-    import {getUserIndexInfo} from '@/service/getData'
+    import {
+        getAllNote,
+        getUserInfo,
+        getUserIndexInfo,
+    } from '@/service/getData'
+    import addNoteKindPop from '@/components/addNoteKindPop'
     export default {
         data() {
             return {
@@ -121,6 +138,8 @@
                 deleteIconUrl: imgBaseUrl+"/delete_icon.png",
                 goTopIconUrl: imgBaseUrl+"/go_top_icon.png",
                 userIconLogo: imgBaseUrl+"/user-logo.png",
+                noNoteKindIconUrl: imgBaseUrl+'/bookmark/bookmark-black.png',
+                newNoteKindIconUrl: imgBaseUrl+'/bookmark/bookmark-new.png',
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
@@ -135,12 +154,17 @@
                 bookNotes: "",
                 timeOutEvent: 0,
                 Loop: null,
-                goTop:false
+                goTop:false,
+                noNoteKindNum: 0,
+                showNewNoteKindPopWin: false
             }
         },
         mounted () {
             window.addEventListener('scroll', this.handleScroll,true);
             this.initData();
+        },
+        components:{
+            addNoteKindPop
         },
         methods: {
             //取消弹窗
@@ -224,8 +248,13 @@
                 this.favoriteNum = userIndexInfo.myFav;
                 this.rubbishNum = userIndexInfo.nearDel;
                 this.sites = userIndexInfo.noteKind;
+                this.noNoteKindNum = userIndexInfo.noNoteKindNumber;
 
+            },
+            popNewNoteKindWin(){
+                this.showNewNoteKindPopWin = true;
             }
+
         }
     }
 </script>

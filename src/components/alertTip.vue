@@ -1,11 +1,7 @@
 <template>
-    <transition mode="out-in" enter-active-class="animated bounceIn" leave-active-class="animated bounceOutDown">
-      <div v-show="showFlag" class="alert_container">
+    <div v-show="showFlag" class="alert_container">
         <span style="color: white">{{alertText}}</span>
       </div>
-    </transition>
-
-
 
 </template>
 
