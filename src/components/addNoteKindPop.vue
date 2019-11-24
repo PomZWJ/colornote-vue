@@ -6,12 +6,10 @@
       </div>
       <div style="width: 100%">
         <span @click="showNoteKindColor" class="iconKind"  :style="{backgroundImage: 'url('+kindIconUrl+')'}"></span>
-        <input v-model="newNoteKindContent" class="inputKind"/>
+        <input v-model="newNoteKindContent" @input="getNewContent()" class="inputKind"/>
       </div>
       <div class="button_div">
-        <span class="cancel_span" @click="cancelPop">取消</span>
-        <span class="su_span">|</span>
-        <span class="submit_span" @click="submitEvent">确定</span>
+        <span class="submit_span" :style="submitSpanStyle" @click="submitEvent">确定</span>
       </div>
     </div>
     <div v-show="showSelectDiv" class="note-color-select-div">
@@ -25,14 +23,16 @@
       <span @click="selectColorEvent('purple')" class="color-select-span" style="background-color: rgb(138,43,225)"></span>
       <span @click="selectColorEvent('indigo')" class="color-select-span" style="background-color: rgb(59,83,231)"></span>
     </div>
+
     <span style="display: none">{{hiddenNoteKindId}}</span>
+
   </div>
 </template>
 
 <script>
     import {imgBaseUrl} from '@/config/env'
     import {
-        updateNoteKind
+        addNoteKind
     } from '@/service/getData'
     export default {
       data(){
@@ -41,7 +41,10 @@
               showPop: true,
               showSelectDiv: false,
               newNoteKindContent:'',
-              hiddenNoteKindId: 'bookmark-red.png'
+              hiddenNoteKindId: 'bookmark-red.png',
+              submitSpanStyle: {
+                  color: "rgba(0, 0, 0, 0.31)"
+              }
           }
       },
       methods:{
@@ -53,9 +56,16 @@
               this.$emit('autoClose');
           },
           async submitEvent(){
-              this.bookNotes = await updateNoteKind(this.newNoteKindContent,this.hiddenNoteKindId);
-              this.cancelPop();
-              this.$emit('autoRefresh');
+                let flag = this.newNoteKindContent;
+                if(!flag.trim()==''){
+                    let noteKind = await addNoteKind(this.newNoteKindContent,this.hiddenNoteKindId);
+                    this.cancelPop();
+                    this.$emit('autoRefresh');
+                    /**
+                     * 如果是添加笔记的页面，需要返回实体才能默认选中
+                     */
+                    this.$emit("getAddAfterEntity",noteKind);
+                }
           },
           showNoteKindColor(){
               this.showSelectDiv = true;
@@ -64,6 +74,15 @@
               this.showSelectDiv = false;
               this.kindIconUrl=imgBaseUrl+'/bookmark/bookmark-'+id+'.png';
               this.hiddenNoteKindId = "bookmark-"+id+".png";
+          },
+          getNewContent(e){
+              let flag = this.newNoteKindContent;
+              console.log(flag);
+              if(flag.trim() == ''){
+                  this.submitSpanStyle.color="rgba(0, 0, 0, 0.31)";
+              }else{
+                  this.submitSpanStyle.color="rgba(45, 168, 199)";
+              }
           }
       }
     }
@@ -119,13 +138,13 @@
 
   }
   .button_div{
-    position: relative;
-    margin-top: 20px;
+
+    margin-top: 30px;
     top: 0px;
     left: 0px;
-    transform: translate(23%,-20%);
+    transform: translate(44%,-50%);
   }
-  .button_div .cancel_span{
+/*  .button_div .cancel_span{
     font-size: 40px;
     color: rgb(45, 168, 199);
 
@@ -135,10 +154,10 @@
     margin-left: 100px;
     margin-right: 100px;
     color: rgba(0, 0, 0, 0.24);
-  }
+  }*/
   .button_div .submit_span{
     font-size: 40px;
-    color: rgb(45, 168, 199);
+    color: rgba(0, 0, 0, 0.31);
   }
   .note-color-select-div{
     position: relative;

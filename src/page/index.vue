@@ -78,7 +78,7 @@
             <!--分类-->
             <div class="line-box" style="margin-top: 30px;">
               <span class="line-text" style="font-size: 16px;color: gray;line-height: 40px;margin: 0;">笔记分类</span>
-              <img class="line-icon" style="position: absolute;right:20px;" v-bind:src="editMarkIconUrl">
+              <img class="line-icon" style="position: absolute;right:20px;" v-bind:src="editMarkIconUrl" @click="handleRouterToEditNoteKind">
             </div>
             <div v-for="site in sites">
               <div class="line-box">
@@ -109,6 +109,9 @@
     <transition name="addNoteKindPop">
       <addNoteKindPop @autoRefresh="initData" @autoClose="showNewNoteKindPopWin=false" v-show="showNewNoteKindPopWin"></addNoteKindPop>
     </transition>
+    <transition name="deleteConfirmPop">
+      <deleteConfirmPop @autoRefresh="initData" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
+    </transition>
   </div>
 
 
@@ -121,6 +124,7 @@
         getUserIndexInfo,
     } from '@/service/getData'
     import addNoteKindPop from '@/components/addNoteKindPop'
+    import deleteConfirmPop from '@/components/deleteConfirmPop'
     export default {
         data() {
             return {
@@ -156,7 +160,8 @@
                 Loop: null,
                 goTop:false,
                 noNoteKindNum: 0,
-                showNewNoteKindPopWin: false
+                showNewNoteKindPopWin: false,
+                showDeleteConfirmPopWin: false
             }
         },
         mounted () {
@@ -164,7 +169,8 @@
             this.initData();
         },
         components:{
-            addNoteKindPop
+            addNoteKindPop,
+            deleteConfirmPop
         },
         methods: {
             //取消弹窗
@@ -253,7 +259,15 @@
             },
             popNewNoteKindWin(){
                 this.showNewNoteKindPopWin = true;
-            }
+            },
+            handleRouterToEditNoteKind(){
+                this.$router.push({
+                    path: '/editNoteKind',
+                    query: {
+
+                    }
+                });
+            },
 
         }
     }

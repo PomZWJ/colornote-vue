@@ -22,7 +22,7 @@
                 <span class="nm-kind-li-img" :style="{backgroundImage: 'url('+item.iconUrl+')'}"></span>
                 <span class="nm-kind-li-text">{{ item.markText }}</span>
               </li>
-              <li style="text-align: center;margin-top: 10px;color: #7071ff;line-height: 30px;font-size: larger" @click="manageKind">新建</li>
+              <li style="text-align: center;margin-top: 10px;color: #7071ff;line-height: 30px;font-size: larger" @click="popNewNoteKindWin">新建</li>
             </ul>
           </div>
         </div>
@@ -34,7 +34,7 @@
     </div>
     <div class="foot_menu">
       <span @click="updateNoteFavState" class="foot_menu_icon" :style="{backgroundImage: 'url('+favBtnIconUrl+')'}"></span>
-      <span @click="deleteNote" class="foot_menu_icon" :style="{backgroundImage: 'url('+delBtnIconUrl+')'}"></span>
+      <span @click="showDeletePopWinMed" class="foot_menu_icon" :style="{backgroundImage: 'url('+delBtnIconUrl+')'}"></span>
     </div>
     <span style="display: none">{{selectNoteKindText}}</span>
     <span style="display: none">{{favState}}</span>
@@ -45,20 +45,30 @@
     <transition mode="out-in" leave-active-class="animated zoomOut">
       <alert-tip v-if="showAlert" @autoClose="showAlert=false" :alertText="alertText"></alert-tip>
     </transition>
+    <transition name="addNoteKindPop">
+      <addNoteKindPop @getAddAfterEntity="getAddEntity" @autoRefresh="initData" @autoClose="showNewNoteKindPopWin=false" v-show="showNewNoteKindPopWin"></addNoteKindPop>
+    </transition>
+    <transition name="deleteConfirmPop">
+      <deleteConfirmPop @deleteOk="deleteNote" @autoRefresh="initData" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
+    </transition>
   </div>
 </template>
 
 <script>
     import {imgBaseUrl} from '@/config/env'
-    import {getSystemCurrentTime} from '@/service/getData'
-    import {getAllNoteKindByUserId} from '@/service/getData'
-    import {addUserNoteInfo} from '@/service/getData'
-    import {getUserNoteByNoteId} from '@/service/getData'
-    import {updateNoteFavState} from '@/service/getData'
-    import {deleteNoteToRubbishByUserIdAndNoteId} from '@/service/getData'
-    import {updateUserNoteInfo} from '@/service/getData'
+    import {
+        getSystemCurrentTime,
+        getAllNoteKindByUserId,
+        addUserNoteInfo,
+        getUserNoteByNoteId,
+        updateNoteFavState,
+        deleteNoteToRubbishByUserIdAndNoteId,
+        updateUserNoteInfo
+    } from '@/service/getData'
     import loading from '@/components/loading'
     import alertTip from '@/components/alertTip'
+    import addNoteKindPop from '@/components/addNoteKindPop'
+    import deleteConfirmPop from '@/components/deleteConfirmPop'
     export default {
         data() {
             return {
@@ -78,11 +88,13 @@
                 favState: '0',
                 showLoading: true,
                 alertText: '', //提示的内容
-                showAlert: false
+                showAlert: false,
+                showNewNoteKindPopWin: false,
+                showDeleteConfirmPopWin: false
             }
         },
         components:{
-          loading, alertTip
+          loading, alertTip,addNoteKindPop,deleteConfirmPop
         },
         mounted () {
             this.initData();
@@ -129,11 +141,6 @@
                 })
                 this.hasClass = '0'
                 this.isShowUserList = false
-            },
-            manageKind(){
-                this.isShowUserList=false;
-                this.hasClass = '0'
-                this.showAlertTip("我是分类管理");
             },
             async submitNote(){
                 if(this.noteContent.trim()==''){
@@ -221,10 +228,25 @@
                     this.showAlertTip("删除成功");
                     this.$router.go(-1);
                 }
+                this.$router.go(-1);
             },
             showAlertTip(text){
                 this.showAlert = true;
                 this.alertText = text;
+            },
+            popNewNoteKindWin(){
+                this.isShowUserList=false;
+                this.hasClass = '0'
+                this.showNewNoteKindPopWin = true;
+            },
+            getAddEntity(newNoteKindEntity){
+                this.defaultKindIconUrl = imgBaseUrl+"/bookmark/"+newNoteKindEntity.kindIconUrl;
+                this.defaultKindText = newNoteKindEntity.noteKindName;
+                this.selectNoteKindText = newNoteKindEntity.noteKindId;
+                //console.log(newNoteKindEntity);
+            },
+            showDeletePopWinMed(){
+                this.showDeleteConfirmPopWin=true;
             }
         }
     }
@@ -233,7 +255,7 @@
 <style scoped>
   .edit-home {
     padding: 30px;
-    background-color: rgba(128, 128, 128, 0.04);
+    /*background-color: rgba(128, 128, 128, 0.04);*/
   }
 
   .edit-bar {

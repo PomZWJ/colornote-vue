@@ -90,12 +90,12 @@ export const updateUserNoteInfo = (noteId,noteKindId,noteContent,noteTime)=>{
   return response;
 }
 
-export const updateNoteKind = (noteKindName,noteKindUrl)=>{
+export const addNoteKind = (noteKindName,noteKindUrl)=>{
   let data = {
     "userId": userId,
     "noteKindName": noteKindName,
     "noteKindUrl": noteKindUrl
   }
-  let response = fetch('/noteKind/updateNoteKind',data);
+  let response = fetch('/noteKind/addNoteKind',data);
   return response;
 }
