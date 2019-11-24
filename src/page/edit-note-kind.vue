@@ -10,10 +10,10 @@
             </div>
           </div>
           <div class="content_div">
-            <div class="each_div">
-              <span class="note-kind-img-span" style="background-image: url('../../static/bookmark/bookmark-black.png')"></span>
-              <input v-model="newNoteKindContent" @input="getNewContent()" class="inputKind"/>
-              <span class="note-kind-img-close" :style="{backgroundImage: 'url('+closeSingleIconUrl+')'}"></span>
+            <div class="each_div" v-for="item in list">
+              <span class="note-kind-img-span" :style="{backgroundImage: 'url('+item.iconUrl+')'}"></span>
+              <input v-model="item.markText" @input="getNewContent()" class="inputKind"/>
+              <span class="note-kind-img-close" @click="deleteKindById(item.id)" :style="{backgroundImage: 'url('+closeSingleIconUrl+')'}"></span>
               <br/>
               <span class="no-div-span"></span>
               <span class="line-span" :style="{backgroundImage: 'url('+lineIconUrl+')'}"></span>
@@ -27,6 +27,10 @@
 
 <script>
     import {imgBaseUrl} from '@/config/env'
+    import {
+        getAllNoteKindByUserIdWithoutNull,
+        deleteNoteKindByNoteKindId
+    } from '@/service/getData'
     export default {
         data(){
             return{
@@ -34,8 +38,12 @@
                 completeBtnIconUrl: imgBaseUrl+"/complete_btn.png",
                 closeSingleIconUrl: imgBaseUrl+"/close_icon.png",
                 lineIconUrl: imgBaseUrl+"/line.png",
-                newNoteKindContent: ''
+                newNoteKindContent: '',
+                list: ''
             }
+        },
+        mounted(){
+            this.initData();
         },
         methods:{
             goBack() {
@@ -52,6 +60,13 @@
                 }else{
                     //this.submitSpanStyle.color="rgba(45, 168, 199)";
                 }
+            },
+            async initData(){
+                this.list = await getAllNoteKindByUserIdWithoutNull();
+            },
+            async deleteKindById(noteKindId){
+                await deleteNoteKindByNoteKindId(noteKindId);
+                this.initData();
             }
         }
     }

@@ -99,3 +99,20 @@ export const addNoteKind = (noteKindName,noteKindUrl)=>{
   let response = fetch('/noteKind/addNoteKind',data);
   return response;
 }
+
+export const getAllNoteKindByUserIdWithoutNull = ()=>{
+  let data = {
+    "userId":userId
+  }
+  let response = fetch('/noteKind/getAllNoteKindByUserIdWithoutNull',data);
+  return response;
+}
+
+export const deleteNoteKindByNoteKindId = (noteKindId)=>{
+  let data = {
+    "userId":userId,
+    "noteKindId": noteKindId
+  }
+  let response = fetch('/noteKind/deleteNoteKindByNoteKindId',data);
+  return response;
+}
