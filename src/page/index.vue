@@ -49,7 +49,7 @@
           </div>
         </div>
       </div>
-        <div style="width: 100%;height: 100%;position:fixed;"  v-show="bookNotes.length==0">
+        <div style="width: 100%;height: 100%;position:fixed;"  v-show="isShowNoSearchResultUI()">
           <div class="no_search_result_div">
             <span class="no_search_result_img" :style="{backgroundImage: 'url('+noSearchResultIconUrl+')'}"></span>
             <br/>
@@ -368,8 +368,12 @@
                     this.indexSelectNoteKindId = "NOT_KIND";
                 }
                 this.bookNotes = this.getAllNoteBook();
-
-
+            },
+            isShowNoSearchResultUI(){
+                if((this.bookNotes==''||this.bookNotes.length==0) && this.seachConditionText.trim() != ''){
+                    return true;
+                }
+                return false;
             }
 
         }
