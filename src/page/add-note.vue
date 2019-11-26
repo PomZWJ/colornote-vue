@@ -49,7 +49,7 @@
       <addNoteKindPop @getAddAfterEntity="getAddEntity" @autoRefresh="initData" @autoClose="showNewNoteKindPopWin=false" v-show="showNewNoteKindPopWin"></addNoteKindPop>
     </transition>
     <transition name="deleteConfirmPop">
-      <deleteConfirmPop @deleteOk="deleteNote" @autoRefresh="initData" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
+      <deleteConfirmPop @deleteOk="deleteNote" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
     </transition>
   </div>
 </template>

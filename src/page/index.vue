@@ -28,13 +28,14 @@
             <div class="cn-item-mask" @click="labelDetails(site.noteId)"></div>
             <!--每个条目的菜单栏(长按item弹出)-->
             <transition mode="out-in" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-              <div class="cn-item-menu" @click="cancelItemMenu" style="border:1px solid rgba(25,137,250,0.26);" v-if="showItemMenu == index">
+              <div class="cn-item-menu" @click="cancelItemMenu" style="border:1px solid rgba(25,137,250,0.26);" v-if="showItemMenu == index" >
                 <!--复制图标-->
-                <span class="i-icon" :style="{backgroundImage: 'url('+copyIconUrl+')'}" @click.stop="copyEvent"></span>
+                <span class="i-icon" :style="{backgroundImage: 'url('+copyIconUrl+')'}" v-clipboard:success="onCopySuccess" v-clipboard:copy="site.noteContent" @click.stop="copyEvent"></span>
                 <!--收藏图标-->
-                <span class="i-icon" :style="{backgroundImage: 'url('+favYesOrNoIconUrl+')',marginLeft: '50px'}" @click.stop="favEvent"></span>
+                <span class="i-icon" v-show="site.isFav=='0'" :style="{backgroundImage: 'url('+favYesOrNoIconUrl+')',marginLeft: '50px'}" @click.stop="favEvent(site.noteId,site.isFav,$event)"></span>
+                <span class="i-icon" v-show="site.isFav=='1'" :style="{backgroundImage: 'url('+favYesIconUrl+')',marginLeft: '50px'}" @click.stop="favEvent(site.noteId,site.isFav,$event)"></span>
                 <!--删除图标-->
-                <span class="i-icon" :style="{backgroundImage: 'url('+deleteIconUrl+')',marginLeft: '50px'}" @click.stop="deleteEvent"></span>
+                <span class="i-icon" :style="{backgroundImage: 'url('+deleteIconUrl+')',marginLeft: '50px'}" @click.stop="deleteEvent(site.noteId)"></span>
               </div>
             </transition>
           </div>
@@ -112,6 +113,13 @@
     <transition name="deleteConfirmPop">
       <deleteConfirmPop @autoRefresh="initData" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
     </transition>
+    <transition mode="out-in" leave-active-class="animated zoomOut">
+      <alert-tip  v-if="showAlert" @autoClose="showAlert=false" :alertText="alertText"></alert-tip>
+    </transition>
+    <transition name="deleteConfirmPop">
+      <deleteConfirmPop @deleteOk="deleteOk" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
+    </transition>
+    <span  style="display: none">{{preDeleteNoteId}}</span>
   </div>
 
 
@@ -122,9 +130,12 @@
         getAllNote,
         getUserInfo,
         getUserIndexInfo,
+        deleteNoteToRubbishByUserIdAndNoteId,
+        updateNoteFavState
     } from '@/service/getData'
     import addNoteKindPop from '@/components/addNoteKindPop'
     import deleteConfirmPop from '@/components/deleteConfirmPop'
+    import alertTip from '@/components/alertTip'
     export default {
         data() {
             return {
@@ -139,6 +150,7 @@
                 searchIconUrl: imgBaseUrl+"/search_icon.png",
                 copyIconUrl: imgBaseUrl+"/copy_icon.png",
                 favYesOrNoIconUrl: imgBaseUrl+"/fav_no.png",
+                favYesIconUrl: imgBaseUrl+"/fav_yes.png",
                 deleteIconUrl: imgBaseUrl+"/delete_icon.png",
                 goTopIconUrl: imgBaseUrl+"/go_top_icon.png",
                 userIconLogo: imgBaseUrl+"/user-logo.png",
@@ -161,7 +173,10 @@
                 goTop:false,
                 noNoteKindNum: 0,
                 showNewNoteKindPopWin: false,
-                showDeleteConfirmPopWin: false
+                showDeleteConfirmPopWin: false,
+                alertText: '',//提示的内容
+                showAlert: false,
+                preDeleteNoteId: ''
             }
         },
         mounted () {
@@ -170,9 +185,14 @@
         },
         components:{
             addNoteKindPop,
-            deleteConfirmPop
+            deleteConfirmPop,
+            alertTip
         },
         methods: {
+            showAlertTip(text){
+                this.showAlert = true;
+                this.alertText = text;
+            },
             //取消弹窗
             cancelPopWin() {
                 if (this.show) {
@@ -184,13 +204,26 @@
                 this.showItemMenu = -1;
             },
             copyEvent() {
-                alert("copy");
             },
-            favEvent() {
-                alert("fav");
+            async favEvent(noteId,isFav,e) {
+                let favState = '0';
+                if(isFav == '0'){
+                    favState = '1';
+                }
+                let cs = e.target;
+                let flag = await updateNoteFavState(noteId,favState);
+                if(flag == true){
+                    for(let i=0;i<this.bookNotes.length;i++){
+                        if(this.bookNotes[i].noteId == noteId){
+                            this.bookNotes[i].isFav = favState;
+                        }
+                    }
+                    this.indexPageData();
+                }
             },
-            deleteEvent() {
-                alert("delete");
+            deleteEvent(noteId) {
+                this.preDeleteNoteId = noteId;
+                this.showDeleteConfirmPopWin= true;
             },
             showDeleteButton(index) {
                 clearTimeout(this.Loop); //再次清空定时器，防止重复注册定时器
@@ -249,13 +282,16 @@
                 this.bookNotes = await getAllNote();
                 let userInfo = await getUserInfo();
                 this.userIdText = userInfo.user.userName;
+                this.indexPageData();
+
+            },
+            async indexPageData(){
                 let userIndexInfo = await getUserIndexInfo();
                 this.allNoteNum = userIndexInfo.allNote;
                 this.favoriteNum = userIndexInfo.myFav;
                 this.rubbishNum = userIndexInfo.nearDel;
                 this.sites = userIndexInfo.noteKind;
                 this.noNoteKindNum = userIndexInfo.noNoteKindNumber;
-
             },
             popNewNoteKindWin(){
                 this.showNewNoteKindPopWin = true;
@@ -268,6 +304,22 @@
                     }
                 });
             },
+            onCopySuccess(){
+                //复制完成后隐藏条形菜单
+                this.showItemMenu = -1;
+                this.showAlertTip("复制成功");
+            },
+            async deleteOk(){
+                let flag = await deleteNoteToRubbishByUserIdAndNoteId(this.preDeleteNoteId);
+                if(flag == true){
+                    this.showAlertTip("删除成功");
+                }
+                this.showDeleteConfirmPopWin = false;
+                this.initData();
+                this.preDeleteNoteId="";
+                this.showItemMenu = -1;
+
+            }
 
         }
     }

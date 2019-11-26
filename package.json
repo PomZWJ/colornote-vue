@@ -17,6 +17,7 @@
     "postcss-px2rem-exclude": "0.0.6",
     "qs.js": "^0.1.12",
     "vue": "^2.5.2",
+    "vue-clipboard2": "^0.3.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

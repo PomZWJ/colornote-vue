@@ -1,6 +1,6 @@
 import fetch from '../config/fetch'
 let userId = "912094062@qq.com";
-let token = "BGJzSe3tuLHmyMWgrNDFZZPn3BeFguhEGuOIc7EVxAsNjRVrpZ6EDttvK9f0P1VGPDYdqtFk4lWzitFnDNO5SvrgmmJIHpV1OUORLRx1so8WBJ6PMavkmxuxUECtzDTC5191DX+yEV4/ZBdRge+6mjBSO7Gu4Bw0pwlra614jvUubaxkBeJZBuxoxu5RUyZ2tq6UQ5eWvxmwSehkZV2y+AtynlZhzGUlRPYR1FcpTdRGOLXYBYIQJSSYAQd6hktgX/gTW0soAfqcGMdwnCvRkSY5DaX/mVCvFAoGosrFm4g2+nIgrBld5z/PtwdAvR3THlxrQNjvUfd05yRzwlfQ4g==";
+let token = "BCgE5rSfUfDmzwlbeJqYCD9VgFExkkpOJHlXlUJKQjlbT1/UhtmPmJ9VgMAWa4abOIt0IWxwjJixit3JWuOKJ6f3trm9DxfD1dXsYzIjwgWhAEDo2AxBnQ4xtmb7Pci1huTLliFMMf0uNQrVmz/k6RoBqWgZrh2X4PWMZ+5ry+UbDNC3CMuGbE9xVBk2+8PVtkNxzp5Et97INyBrip+VEqQRof7Eg8gXy8K1LXsYZJyf7BdVXr6Wd+mXXRRQ86LfIsi9bskyyESXSXVEnMgijgRStjcUpI5rmZshOs0SdKCriCN5PaTANnBYK0Jd03L2wEG3Lww/bDLgC2utsvgRIg==";
 export const getAllNote = ()=>{
   let data = {
     "userId":userId
@@ -114,5 +114,14 @@ export const deleteNoteKindByNoteKindId = (noteKindId)=>{
     "noteKindId": noteKindId
   }
   let response = fetch('/noteKind/deleteNoteKindByNoteKindId',data);
+  return response;
+}
+
+export const updateNoteKindByUserId = (params)=>{
+  let data = {
+    "userId":userId,
+    "params": JSON.stringify(params)
+  }
+  let response = fetch('/noteKind/updateNoteKindByUserId',data);
   return response;
 }
