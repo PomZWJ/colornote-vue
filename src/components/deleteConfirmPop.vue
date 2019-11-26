@@ -27,6 +27,7 @@
         methods:{
             cancelDeletePop(){
                 this.showDeletePopWin = false;
+                this.$emit('autoClose');
 
             },
             submitDelete(){

@@ -1,9 +1,12 @@
 import fetch from '../config/fetch'
 let userId = "912094062@qq.com";
 let token = "BCgE5rSfUfDmzwlbeJqYCD9VgFExkkpOJHlXlUJKQjlbT1/UhtmPmJ9VgMAWa4abOIt0IWxwjJixit3JWuOKJ6f3trm9DxfD1dXsYzIjwgWhAEDo2AxBnQ4xtmb7Pci1huTLliFMMf0uNQrVmz/k6RoBqWgZrh2X4PWMZ+5ry+UbDNC3CMuGbE9xVBk2+8PVtkNxzp5Et97INyBrip+VEqQRof7Eg8gXy8K1LXsYZJyf7BdVXr6Wd+mXXRRQ86LfIsi9bskyyESXSXVEnMgijgRStjcUpI5rmZshOs0SdKCriCN5PaTANnBYK0Jd03L2wEG3Lww/bDLgC2utsvgRIg==";
-export const getAllNote = ()=>{
+export const getAllNote = (noteContent,noteKindId,isFav)=>{
   let data = {
-    "userId":userId
+    "userId":userId,
+    "noteContent":noteContent,
+    "noteKindId":noteKindId,
+    "isFav":isFav
   }
   let response = fetch('/note/getAllNoteInfo',data);
   return response;
@@ -125,3 +128,4 @@ export const updateNoteKindByUserId = (params)=>{
   let response = fetch('/noteKind/updateNoteKindByUserId',data);
   return response;
 }
+

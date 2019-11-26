@@ -3,17 +3,25 @@
     <!--主页-->
     <div class="home" style="overflow:visible" >
       <!--app bar start-->
-      <div style="display: flex;align-items: center;position: relative">
-        <!--菜单图标-->
-        <img v-bind:src="menuIconUrl" @click="show=!show" style="width: 30px;height: 30px"/>
-        <!--bar title-->
-        <span style="font-size: 20px;margin-left: 10px">全部笔记</span>
-        <!--搜索图标-->
-        <img v-bind:src="searchIconUrl" style="width: 30px;height: 30px;position: absolute;right: 10px;"/>
+      <div>
+        <div v-show="!showSearchBar" style="display: flex;align-items: center;position: relative">
+          <!--菜单图标-->
+          <img v-bind:src="menuIconUrl" @click="show=!show" style="width: 30px;height: 30px"/>
+          <!--bar title-->
+          <span style="font-size: 20px;margin-left: 10px">{{titleBigText}}</span>
+          <!--搜索图标-->
+          <img @click="showSearchBar = !showSearchBar"  v-bind:src="searchIconUrl" style="width: 30px;height: 30px;position: absolute;right: 10px;"/>
+        </div>
+        <div v-show="showSearchBar" style="display: flex;align-items: center;position: relative">
+          <!--搜索返回图标-->
+          <img v-bind:src="searchBackIconUrl" @click="searchBackBtn" style="width: 30px;height: 30px"/>
+          <!--search input-->
+          <input class="search-input-bar" @input="search($event)" v-model="seachConditionText" type="text"/>
+        </div>
       </div>
       <div>
       <!--笔记条目(使用v-for循环)-->
-      <div v-for="(site,index) in bookNotes" :key="index">
+      <div v-for="(site,index) in bookNotes" :key="index" v-show="bookNotes.length>0">
         <div class="cn-item-body" @touchstart="showDeleteButton(index)" @touchend="emptyTime">
           <div class="cn-item-li">
             <div class="cn-item-main" style="border:1px solid rgba(25,137,250,0.26);">
@@ -41,6 +49,14 @@
           </div>
         </div>
       </div>
+        <div style="width: 100%;height: 100%;position:fixed;"  v-show="bookNotes.length==0">
+          <div class="no_search_result_div">
+            <span class="no_search_result_img" :style="{backgroundImage: 'url('+noSearchResultIconUrl+')'}"></span>
+            <br/>
+            <span class="no_search_result_text">没有匹配的结果</span>
+          </div>
+        </div>
+
       </div>
 
       <!--新增按钮和回到顶部按钮-->
@@ -61,17 +77,17 @@
             </div>
           </div>
           <div style="margin-left:-10px;padding-left: 30px;background-color: white">
-            <div class="line-box">
+            <div class="line-box" @click="selectNoteKindEvent('','全部笔记')">
               <img class="line-icon" v-bind:src="noteIconUrl">
               <span class="line-text">{{allNoteText}}</span>
               <span class="line-num">{{allNoteNum}}</span>
             </div>
-            <div class="line-box">
+            <div class="line-box" @click="selectNoteKindEvent('','我的收藏')">
               <img class="line-icon" v-bind:src="favIconUrl">
               <span class="line-text">{{favoriteText}}</span>
               <span class="line-num">{{favoriteNum}}</span>
             </div>
-            <div class="line-box">
+            <div class="line-box" @click="selectNoteKindEvent('','最近删除')">
               <img class="line-icon" v-bind:src="rubbishIconUrl">
               <span class="line-text">{{rubbishText}}</span>
               <span class="line-num">{{rubbishNum}}</span>
@@ -82,14 +98,14 @@
               <img class="line-icon" style="position: absolute;right:20px;" v-bind:src="editMarkIconUrl" @click="handleRouterToEditNoteKind">
             </div>
             <div v-for="site in sites">
-              <div class="line-box">
+              <div class="line-box" @click="selectNoteKindEvent(site.id,site.markText)">
                 <img class="line-icon" v-bind:src="site.iconUrl">
                 <span class="line-text">{{site.markText}}</span>
                 <span class="line-num">{{site.markNum}}</span>
               </div>
             </div>
 
-            <div class="line-box">
+            <div class="line-box"  @click="selectNoteKindEvent('','未分类')">
               <img class="line-icon" v-bind:src="noNoteKindIconUrl">
               <span class="line-text">未分类</span>
               <span class="line-num">{{noNoteKindNum}}</span>
@@ -117,7 +133,7 @@
       <alert-tip  v-if="showAlert" @autoClose="showAlert=false" :alertText="alertText"></alert-tip>
     </transition>
     <transition name="deleteConfirmPop">
-      <deleteConfirmPop @deleteOk="deleteOk" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
+      <deleteConfirmPop @deleteOk="confirmDelete" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
     </transition>
     <span  style="display: none">{{preDeleteNoteId}}</span>
   </div>
@@ -131,7 +147,7 @@
         getUserInfo,
         getUserIndexInfo,
         deleteNoteToRubbishByUserIdAndNoteId,
-        updateNoteFavState
+        updateNoteFavState,
     } from '@/service/getData'
     import addNoteKindPop from '@/components/addNoteKindPop'
     import deleteConfirmPop from '@/components/deleteConfirmPop'
@@ -156,6 +172,8 @@
                 userIconLogo: imgBaseUrl+"/user-logo.png",
                 noNoteKindIconUrl: imgBaseUrl+'/bookmark/bookmark-black.png',
                 newNoteKindIconUrl: imgBaseUrl+'/bookmark/bookmark-new.png',
+                searchBackIconUrl: imgBaseUrl+'/back_btn.png',
+                noSearchResultIconUrl: imgBaseUrl+"/no_search_result.png",
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
@@ -176,7 +194,13 @@
                 showDeleteConfirmPopWin: false,
                 alertText: '',//提示的内容
                 showAlert: false,
-                preDeleteNoteId: ''
+                preDeleteNoteId: '',
+                showSearchBar: false,
+                seachConditionText: '',
+                indexSelectNoteKindId:"",
+                indexSelectMyFav:'',
+                titleBigText:'全部笔记'
+
             }
         },
         mounted () {
@@ -279,11 +303,14 @@
                 });
             },
             async initData(){
-                this.bookNotes = await getAllNote();
+                this.getAllNoteBook();
                 let userInfo = await getUserInfo();
                 this.userIdText = userInfo.user.userName;
                 this.indexPageData();
 
+            },
+            async getAllNoteBook(){
+                this.bookNotes = await getAllNote(this.seachConditionText,this.indexSelectNoteKindId,this.indexSelectMyFav);
             },
             async indexPageData(){
                 let userIndexInfo = await getUserIndexInfo();
@@ -309,7 +336,7 @@
                 this.showItemMenu = -1;
                 this.showAlertTip("复制成功");
             },
-            async deleteOk(){
+            async confirmDelete(){
                 let flag = await deleteNoteToRubbishByUserIdAndNoteId(this.preDeleteNoteId);
                 if(flag == true){
                     this.showAlertTip("删除成功");
@@ -318,6 +345,30 @@
                 this.initData();
                 this.preDeleteNoteId="";
                 this.showItemMenu = -1;
+            },
+            async search(e){
+                this.seachConditionText = e.currentTarget.value;
+                this.bookNotes = this.getAllNoteBook();
+            },
+            async searchBackBtn(){
+                this.showSearchBar = !this.showSearchBar;
+                this.seachConditionText = "";
+                this.bookNotes = this.getAllNoteBook();
+            },
+            selectNoteKindEvent(noteKindId,titleText){
+                this.show = false;
+                this.titleBigText = titleText;
+                this.indexSelectNoteKindId = noteKindId;
+                this.indexSelectMyFav = "";
+                if(titleText == '全部笔记'){
+                    this.indexSelectNoteKindId = "";
+                }else if(titleText == '我的收藏'){
+                    this.indexSelectMyFav = "1";
+                }else if(titleText=='未分类'){
+                    this.indexSelectNoteKindId = "NOT_KIND";
+                }
+                this.bookNotes = this.getAllNoteBook();
+
 
             }
 
@@ -450,6 +501,35 @@
     background-size: 100% 100%;
     background-repeat: no-repeat;
     background-image: url("../../static/add_note_icon.png");
+  }
+  .search-input-bar{
+    margin-left: 20px;
+    outline: none;
+    height: 70px;
+    width: 90%;
+    padding-left: 30px;
+    border:2px solid rgb(98, 86, 205);
+    border-radius: 40px;
+  }
+  .no_search_result_div{
+    display: inline-block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-60%,-60%);
+    position: relative
+  }
+  .no_search_result_img{
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    background-size: 100% 100%
+  }
+  .no_search_result_text{
+    width: 200px;
+    text-align: center;
+    display: inline-block;
   }
 </style>
 
