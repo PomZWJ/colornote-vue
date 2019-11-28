@@ -1,12 +1,38 @@
 import fetch from '../config/fetch'
-let userId = "912094062@qq.com";
-let token = "BCgE5rSfUfDmzwlbeJqYCD9VgFExkkpOJHlXlUJKQjlbT1/UhtmPmJ9VgMAWa4abOIt0IWxwjJixit3JWuOKJ6f3trm9DxfD1dXsYzIjwgWhAEDo2AxBnQ4xtmb7Pci1huTLliFMMf0uNQrVmz/k6RoBqWgZrh2X4PWMZ+5ry+UbDNC3CMuGbE9xVBk2+8PVtkNxzp5Et97INyBrip+VEqQRof7Eg8gXy8K1LXsYZJyf7BdVXr6Wd+mXXRRQ86LfIsi9bskyyESXSXVEnMgijgRStjcUpI5rmZshOs0SdKCriCN5PaTANnBYK0Jd03L2wEG3Lww/bDLgC2utsvgRIg==";
-export const getAllNote = (noteContent,noteKindId,isFav)=>{
+import { setStore,getStore,removeStore } from '@/config/mUtils' // 本地存储方法封装
+export const userlogin = (userId,verificationCode)=>{
   let data = {
     "userId":userId,
+    "verificationCode":verificationCode,
+  }
+  let response = fetch('/user/login',data);
+  return response;
+}
+
+export const sendVerificationCode = (userId)=>{
+  let data = {
+    "userId":userId,
+  }
+  let response = fetch('/user/sendVerificationCode',data);
+  return response;
+}
+
+export const determineUserTokenIsCorrect = ()=>{
+  let data = {
+    "userId":getStore("userId"),
+    "toekn":getStore("token"),
+  }
+  let response = fetch('/user/determineUserTokenIsCorrect',data);
+  return response;
+}
+//开始拦截
+export const getAllNote = (noteContent,noteKindId,isFav)=>{
+  let data = {
+    "userId":getStore("userId"),
     "noteContent":noteContent,
     "noteKindId":noteKindId,
-    "isFav":isFav
+    "isFav":isFav,
+    "token":getStore("token")
   }
   let response = fetch('/note/getAllNoteInfo',data);
   return response;
@@ -14,8 +40,8 @@ export const getAllNote = (noteContent,noteKindId,isFav)=>{
 
 export const getUserInfo = ()=>{
   let data = {
-    "userId":userId,
-    "token":token
+    "userId":getStore("userId"),
+    "token":getStore("token")
   }
   let response = fetch('/user/getCurrentLoginUserInfo',data);
   return response;
@@ -23,20 +49,26 @@ export const getUserInfo = ()=>{
 
 export const getUserIndexInfo = ()=>{
   let data = {
-    "userId":userId
+    "userId":getStore("userId"),
+    "token":getStore("token")
   }
   let response = fetch('/user/getUserIndexInfo',data);
   return response;
 }
 
 export const getSystemCurrentTime = ()=>{
-  let response = fetch('/common/getSystemCurrentTime');
+  let data = {
+    "userId":getStore("userId"),
+    "token":getStore("token")
+  }
+  let response = fetch('/common/getSystemCurrentTime',data);
   return response;
 }
 
 export const getAllNoteKindByUserId = ()=>{
   let data = {
-    "userId":userId
+    "userId":getStore("userId"),
+    "token":getStore("token")
   }
   let response = fetch('/noteKind/getAllNoteKindByUserId',data);
   return response;
@@ -44,7 +76,8 @@ export const getAllNoteKindByUserId = ()=>{
 
 export const addUserNoteInfo = (noteKindId,noteContent,noteTime)=>{
   let data = {
-    "userId": userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "noteKindId": noteKindId,
     "noteContent": noteContent,
     "noteTime": noteTime
@@ -55,7 +88,8 @@ export const addUserNoteInfo = (noteKindId,noteContent,noteTime)=>{
 
 export const getUserNoteByNoteId = (noteId)=>{
   let data = {
-    "userId": userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "noteId": noteId
   }
   let response = fetch('/note/getUserNoteByNoteId',data);
@@ -64,7 +98,8 @@ export const getUserNoteByNoteId = (noteId)=>{
 
 export const updateNoteFavState = (noteId,favState)=>{
   let data = {
-    "userId": userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "noteId": noteId,
     "favState": favState
   }
@@ -74,7 +109,8 @@ export const updateNoteFavState = (noteId,favState)=>{
 
 export const deleteNoteToRubbishByUserIdAndNoteId = (noteId)=>{
   let data = {
-    "userId": userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "noteId": noteId
   }
   let response = fetch('/note/deleteNoteToRubbishByUserIdAndNoteId',data);
@@ -83,7 +119,8 @@ export const deleteNoteToRubbishByUserIdAndNoteId = (noteId)=>{
 
 export const updateUserNoteInfo = (noteId,noteKindId,noteContent,noteTime)=>{
   let data = {
-    "userId": userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "noteId": noteId,
     "noteKindId": noteKindId,
     "noteContent": noteContent,
@@ -95,7 +132,8 @@ export const updateUserNoteInfo = (noteId,noteKindId,noteContent,noteTime)=>{
 
 export const addNoteKind = (noteKindName,noteKindUrl)=>{
   let data = {
-    "userId": userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "noteKindName": noteKindName,
     "noteKindUrl": noteKindUrl
   }
@@ -105,7 +143,8 @@ export const addNoteKind = (noteKindName,noteKindUrl)=>{
 
 export const getAllNoteKindByUserIdWithoutNull = ()=>{
   let data = {
-    "userId":userId
+    "userId":getStore("userId"),
+    "token":getStore("token")
   }
   let response = fetch('/noteKind/getAllNoteKindByUserIdWithoutNull',data);
   return response;
@@ -113,7 +152,8 @@ export const getAllNoteKindByUserIdWithoutNull = ()=>{
 
 export const deleteNoteKindByNoteKindId = (noteKindId)=>{
   let data = {
-    "userId":userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "noteKindId": noteKindId
   }
   let response = fetch('/noteKind/deleteNoteKindByNoteKindId',data);
@@ -122,7 +162,8 @@ export const deleteNoteKindByNoteKindId = (noteKindId)=>{
 
 export const updateNoteKindByUserId = (params)=>{
   let data = {
-    "userId":userId,
+    "userId":getStore("userId"),
+    "token":getStore("token"),
     "params": JSON.stringify(params)
   }
   let response = fetch('/noteKind/updateNoteKindByUserId',data);

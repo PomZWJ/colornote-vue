@@ -119,6 +119,11 @@
               <img class="line-icon" v-bind:src="setIconUrl">
               <span class="line-text">设置</span>
             </div>
+
+            <div class="line-box" style="padding-bottom: 30px;background-color: white" @click="outLogin">
+              <img class="line-icon" v-bind:src="exitLoginIconUrl">
+              <span class="line-text">退出登录</span>
+            </div>
           </div>
         </div>
       </div>
@@ -152,6 +157,7 @@
     import addNoteKindPop from '@/components/addNoteKindPop'
     import deleteConfirmPop from '@/components/deleteConfirmPop'
     import alertTip from '@/components/alertTip'
+    import {setStore, getStore, removeStore} from '@/config/mUtils' // 本地存储方法封装
     export default {
         data() {
             return {
@@ -174,6 +180,7 @@
                 newNoteKindIconUrl: imgBaseUrl+'/bookmark/bookmark-new.png',
                 searchBackIconUrl: imgBaseUrl+'/back_btn.png',
                 noSearchResultIconUrl: imgBaseUrl+"/no_search_result.png",
+                exitLoginIconUrl: imgBaseUrl+"/exit_login.png",
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
@@ -374,6 +381,16 @@
                     return true;
                 }
                 return false;
+            },
+            outLogin(){
+                removeStore("userId");
+                removeStore("token");
+                this.$router.push({
+                    path: '/login',
+                    query: {
+
+                    }
+                });
             }
 
         }
