@@ -255,7 +255,6 @@
 <style scoped>
   .edit-home {
     padding: 30px;
-    /*background-color: rgba(128, 128, 128, 0.04);*/
   }
 
   .edit-bar {

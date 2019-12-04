@@ -1,7 +1,7 @@
 <template>
     <div v-show="showFlag" class="alert_container">
         <span style="color: white">{{alertText}}</span>
-      </div>
+    </div>
 
 </template>
 

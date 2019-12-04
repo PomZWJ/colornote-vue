@@ -86,13 +86,13 @@
 
             },
             async loginBtnEvent(){
-                this.showLoading = true;
+                //this.showLoading = true;
                 this.loginBtnDis = false;
                 //console.log("123");
                 let a = this.monitorPhoneUtils();
                 let b = this.monitorUserPwdInput();
                 if(a&&b){
-                    this.showLoading = false;
+                    //this.showLoading = false;
                     let params = await userlogin(this.userId,this.userVerification);
                     this.loginBtnDis = true;
 

@@ -1,16 +1,18 @@
 <template>
     <div class="loading_container">
-      <div class="load_img" :style="{backgroundPositionY: -(positionY%7)*2.5+'rem'}">
+      <div class="load_img" :style="{backgroundPositionY: -(positionY%7)*2.5+'rem',backgroundImage: 'url('+loadImgUrl+')'}">
       </div>
     </div>
 </template>
 
 <script>
+    import {imgBaseUrl} from '@/config/env'
     export default {
         data(){
             return{
                 positionY: 0,
-                timer: null
+                timer: null,
+                loadImgUrl: imgBaseUrl+"/icon_loading.png"
             }
         },
         mounted() {
@@ -32,7 +34,7 @@
     background-color: rgba(255, 255, 255, 0.65);
   }
   .load_img{
-    background: url(../../static/icon_loading.png) no-repeat 0 0;
+    background: no-repeat 0 0;
     background-size: 2.5rem auto;
     width: 200px;
     height: 200px;
