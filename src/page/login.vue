@@ -24,6 +24,9 @@
           </div>
         </div>
       </div>
+      <transition name="loading">
+        <loading v-show="showLoading"></loading>
+      </transition>
     </div>
 </template>
 
@@ -31,6 +34,7 @@
     import {imgBaseUrl} from '@/config/env'
     import {userlogin,sendVerificationCode} from '@/service/getData'
     import { setStore,getStore,removeStore } from '@/config/mUtils' // 本地存储方法封装
+    import loading from '@/components/loading'
     export default {
         data(){
             return{
@@ -52,12 +56,16 @@
                 dis: false,
                 userPwdInputBorderColor: "rgba(0, 0, 0, 0.42)",
                 loginBtnDis:true,
+                showLoading: false,
             }
+        },
+        components:{
+            loading
         },
         methods:{
             async sendVerificationEvent(){
                 if(this.monitorPhoneUtils()){
-                    //let flag = await sendVerificationCode(this.userId);
+                    let flag = await sendVerificationCode(this.userId);
                     this.dis = true;
                     this.sendVbtnBorderColor = "rgba(0, 0, 0, 0.42)";
                     let clock = window.setInterval(() => {
@@ -78,13 +86,16 @@
 
             },
             async loginBtnEvent(){
+                this.showLoading = true;
                 this.loginBtnDis = false;
                 //console.log("123");
                 let a = this.monitorPhoneUtils();
                 let b = this.monitorUserPwdInput();
                 if(a&&b){
+                    this.showLoading = false;
                     let params = await userlogin(this.userId,this.userVerification);
                     this.loginBtnDis = true;
+
                     setStore("userId",params.userId);
                     setStore("token",params.token);
                     this.$router.push({

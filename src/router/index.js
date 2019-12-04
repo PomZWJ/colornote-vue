@@ -8,6 +8,7 @@ import login from '@/page/login'
 import {setStore, getStore, removeStore} from '@/config/mUtils' // 本地存储方法封装
 import axios from "axios";
 import qs from 'qs';
+import {baseUrl} from '@/config/env'
 
 Vue.use(Router);
 
@@ -43,7 +44,7 @@ router.beforeEach((to, from, next) => {
   let token_Store = getStore("token");
   axios({
     method: "post",
-    url: 'http://vzdn.natapp1.cc/ColorNote//user/determineUserTokenIsCorrect',
+    url: baseUrl+'/user/determineUserTokenIsCorrect',
     data: qs.stringify({
       "userId": userId_Store,
       "token": token_Store

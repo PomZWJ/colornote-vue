@@ -12,12 +12,14 @@
           <!--搜索图标-->
           <img @click="showSearchBar = !showSearchBar"  v-bind:src="searchIconUrl" style="width: 30px;height: 30px;position: absolute;right: 10px;"/>
         </div>
+        <transition mode="out-in" enter-active-class="animated bounceInRight">
         <div v-show="showSearchBar" style="display: flex;align-items: center;position: relative">
           <!--搜索返回图标-->
           <img v-bind:src="searchBackIconUrl" @click="searchBackBtn" style="width: 30px;height: 30px"/>
           <!--search input-->
           <input class="search-input-bar" @input="search($event)" v-model="seachConditionText" type="text"/>
         </div>
+        </transition>
       </div>
       <div>
       <!--笔记条目(使用v-for循环)-->
@@ -49,20 +51,27 @@
           </div>
         </div>
       </div>
-        <div style="width: 100%;height: 100%;position:fixed;"  v-show="isShowNoSearchResultUI()">
+        <div class="no_notes" v-show="bookNotes.length==0 && showSearchBar == false">
           <div class="no_search_result_div">
             <span class="no_search_result_img" :style="{backgroundImage: 'url('+noSearchResultIconUrl+')'}"></span>
             <br/>
-            <span class="no_search_result_text">没有匹配的结果</span>
+            <span class="no_search_result_text">没有记录笔记</span>
           </div>
         </div>
+        <div class="no_notes" v-show="isShowNoSearchResultUI()">
+        <div class="no_search_result_div">
+          <span class="no_search_result_img" :style="{backgroundImage: 'url('+noSearchResultIconUrl+')'}"></span>
+          <br/>
+          <span class="no_search_result_text">没有匹配的结果</span>
+        </div>
+      </div>
 
       </div>
 
       <!--新增按钮和回到顶部按钮-->
       <div class="footer">
-        <div class="goTopBtn" v-if="goTop" @click="toTop"></div>
-        <div class="addNoteBtn" @click="handleRouterToAddNote"></div>
+        <div class="goTopBtn" :style="{backgroundImage: 'url('+goTopBtnIconUrl+')'}" v-if="goTop" @click="toTop"></div>
+        <div class="addNoteBtn" :style="{backgroundImage: 'url('+addNoteIconUrl+')'}" @click="handleRouterToAddNote"></div>
       </div>
     </div>
     <!--主菜单页-->
@@ -181,6 +190,8 @@
                 searchBackIconUrl: imgBaseUrl+'/back_btn.png',
                 noSearchResultIconUrl: imgBaseUrl+"/no_search_result.png",
                 exitLoginIconUrl: imgBaseUrl+"/exit_login.png",
+                goTopBtnIconUrl: imgBaseUrl+"/go_top_icon.png",
+                addNoteIconUrl: imgBaseUrl+"/add_note_icon.png",
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
@@ -509,7 +520,6 @@
     height: 100px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-image: url("../../static/go_top_icon.png");
   }
   .footer .addNoteBtn{
     position: fixed;
@@ -521,7 +531,6 @@
     height: 100px;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-image: url("../../static/add_note_icon.png");
   }
   .search-input-bar{
     margin-left: 20px;
@@ -543,14 +552,21 @@
     vertical-align: middle;
     background-repeat: no-repeat;
     display: inline-block;
-    width: 200px;
-    height: 200px;
+    width: 230px;
+    height: 230px;
     background-size: 100% 100%
   }
   .no_search_result_text{
-    width: 200px;
+    width: 230px;
+    margin-top: 20px;
+    font-size: 30px;
     text-align: center;
     display: inline-block;
+  }
+  .no_notes{
+    width: 100%;
+    height: 100%;
+    position:fixed;
   }
 </style>
 
