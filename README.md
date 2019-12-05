@@ -1,8 +1,12 @@
 
 # ColorNote-vue
 
-![](static/fav2.png)
 
+
+
+
+<img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/static/fav2.png" width="250" height="140">
+	
 
 #
 > your best note
