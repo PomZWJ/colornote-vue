@@ -15,7 +15,7 @@
           <span style="display: flex;align-items:center;position:relative;width: 140px;" @click="showAccountList($event)">
             <span class="default-kind-img-span" :style="{backgroundImage: 'url('+defaultKindIconUrl+')'}"></span>
             <span style="margin-left: 34px;color: black">{{defaultKindText}}</span>
-            <span style="margin-left: 10px;background-size: 100% 100%;background-image: url('../../static/arrow-down.png');display: inline-block;width: 10px;height: 7px;" :class="hasClass==='1' ? 'openlist': (hasClass==='0'?'foldlist':'')" @click="showAccountList($event)"></span>
+            <span :style="{backgroundImage: 'url('+arrowDownIconUrl+')'}" style="margin-left: 10px;background-size: 100% 100%;display: inline-block;width: 10px;height: 7px;" :class="hasClass==='1' ? 'openlist': (hasClass==='0'?'foldlist':'')" @click="showAccountList($event)"></span>
           </span>
             <ul class="nm-kind-ul" v-if="isShowUserList">
               <li class="nm-kind-li" :class="{'selected':item.selected===true}" v-for="item in list" @click="changeUser(item)">
@@ -77,6 +77,7 @@
                 defaultKindIconUrl: imgBaseUrl+'/bookmark/bookmark-black.png',
                 favBtnIconUrl: imgBaseUrl+"/footmenu/fav_icon_foot.png",
                 delBtnIconUrl: imgBaseUrl+"/footmenu/delete_icon_foot.png",
+                arrowDownIconUrl: imgBaseUrl+"/arrow-down.png",
                 ebText: "",
                 defaultKindText: "未分类",
                 currentTime: "",
