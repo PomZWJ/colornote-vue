@@ -1,4 +1,4 @@
-<img src="https://github.com/PomZWJ/colornote-vue/blob/master/static/fav.png?raw=true" width="200" height="200"/> 
+<img src="static/fav2.png" width="200" height="200"/> 
 
 # ColorNote-vue
 
