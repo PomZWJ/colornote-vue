@@ -1,7 +1,7 @@
 
-<img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/static/fav2.png" width="200" height="200">
+#<img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/static/fav2.png" width="30" height="30">  ColorNote-vue
 
-#ColorNote-vue 彩色笔记
+# 彩色笔记
 
 ##介绍
 > **高仿EMUI9.0 备忘录(用于第一个前后端分离项目)，这边是前端项目，后台项目详见[彩色笔记后台](https://github.com/PomZWJ/ColorNote)**
