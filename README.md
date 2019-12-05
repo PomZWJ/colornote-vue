@@ -1,6 +1,5 @@
 
-# <img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/static/fav2.png" width="250" height="140"><span style="font-size: 30px;font-style: oblique;font-weight: bolder;">ColorNote-vue</span>
-
+# <img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/static/fav2.png" width="200" height="200">ColorNote-vue
 
 
 
