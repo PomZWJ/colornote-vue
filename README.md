@@ -1,5 +1,5 @@
 
-#<img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/static/fav2.png" width="30" height="30">  ColorNote-vue
+# <img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/static/fav2.png" width="30" height="30">  ColorNote-vue
 
 # 彩色笔记
 
