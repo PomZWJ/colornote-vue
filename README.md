@@ -1,4 +1,6 @@
-# colornote-vue
+<img src="https://github.com/PomZWJ/colornote-vue/tree/master/static/fav2.png" width="200" height="200"/> 
+
+# ColorNote-vue
 
 > your best note
 
