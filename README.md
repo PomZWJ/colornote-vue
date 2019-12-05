@@ -1,7 +1,10 @@
-<img src="static/fav2.png" width="200" height="200"/> 
 
 # ColorNote-vue
 
+![](static/fav2.png)
+
+
+#
 > your best note
 
 ## Build Setup
