@@ -27,6 +27,8 @@
 
 <img src="" width="250" height="250"/>
 
+## 想加入技术开发群的加我，备注加群即可
+<img src="https://raw.githubusercontent.com/PomZWJ/colornote-vue/master/screenshot/wx_icon.jpg" width="300" height="300"/>
 
 
 # 目标功能
