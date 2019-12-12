@@ -5,6 +5,7 @@ import index from '@/page/index'
 import addNote from '@/page/add-note'
 import editNoteKind from '@/page/edit-note-kind'
 import login from '@/page/login'
+import myWxQr from '@/page/myWxQr'
 import {setStore, getStore, removeStore} from '@/config/mUtils' // 本地存储方法封装
 import axios from "axios";
 import qs from 'qs';
@@ -14,6 +15,8 @@ Vue.use(Router);
 
 
 const router = new Router({
+  mode: 'history',
+  base: '/color-note/',
   routes: [
     {
       path: '/',
@@ -34,6 +37,11 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: login
+    },
+    {
+      path: '/myWxQr',
+      name: 'myWxQr',
+      component: myWxQr
     }
   ]
 })

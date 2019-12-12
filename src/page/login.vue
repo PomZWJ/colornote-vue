@@ -22,6 +22,9 @@
           <div>
             <span v-bind:disabled="loginBtnDis" class="login_ok_span" @click="loginBtnEvent" :style="{backgroundImage: 'url('+loginBtnImgUrl+')'}"></span>
           </div>
+          <div>
+            <span class="try_account_login_span" @click="tryAccountLoginEvent">体验账户登录</span>
+          </div>
         </div>
       </div>
       <transition name="loading">
@@ -32,7 +35,7 @@
 
 <script>
     import {imgBaseUrl} from '@/config/env'
-    import {userlogin,sendVerificationCode} from '@/service/getData'
+    import {userlogin,sendVerificationCode,tryAccountLogin} from '@/service/getData'
     import { setStore,getStore,removeStore } from '@/config/mUtils' // 本地存储方法封装
     import loading from '@/components/loading'
     export default {
@@ -136,6 +139,17 @@
                     this.showErrorUserPwdText = true;
                     return false;
                 }
+            },
+            async tryAccountLoginEvent(){
+                let params = await tryAccountLogin();
+                this.loginBtnDis = true;
+                setStore("userId",params.userId);
+                setStore("token",params.token);
+                this.$router.push({
+                    path: '/',
+                    query: {
+                    }
+                });
             }
         }
     }
@@ -219,5 +233,14 @@
     color: red;
     margin-top: 10px;
     margin-left: 20px;
+  }
+  .try_account_login_span{
+    display:inline-block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    text-decoration: underline;
+    margin-top: 30px;
+
   }
 </style>

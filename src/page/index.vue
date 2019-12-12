@@ -125,6 +125,11 @@
             </div>
 
             <div class="line-box" style="padding-bottom: 30px;background-color: white">
+              <img class="line-icon" v-bind:src="wxIconUrl">
+              <span class="line-text" @click="toMyWxChatQR">进技术交流群</span>
+            </div>
+
+            <div class="line-box" style="padding-bottom: 30px;background-color: white">
               <img class="line-icon" v-bind:src="setIconUrl">
               <span class="line-text">设置</span>
             </div>
@@ -192,6 +197,7 @@
                 exitLoginIconUrl: imgBaseUrl+"/exit_login.png",
                 goTopBtnIconUrl: imgBaseUrl+"/go_top_icon.png",
                 addNoteIconUrl: imgBaseUrl+"/add_note_icon.png",
+                wxIconUrl: imgBaseUrl+'/wx_icon.png',
                 allNoteNum: 0,
                 favoriteNum: 0,
                 rubbishNum: 0,
@@ -402,6 +408,14 @@
 
                     }
                 });
+            },
+            toMyWxChatQR(){
+                this.$router.push({
+                    path: '/myWxQr',
+                    query: {
+
+                    }
+                });
             }
 
         }
@@ -413,6 +427,7 @@
     height: 100%;
     position: absolute;
     padding: 30px;
+    background-color: white;
   }
 
   .popup {

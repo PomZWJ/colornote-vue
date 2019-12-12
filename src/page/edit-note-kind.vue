@@ -11,7 +11,7 @@
           </div>
           <div class="content_div">
             <div class="each_div" v-for="item in list">
-              <span class="note-kind-img-span" @click="showColorSelectDivEvent($event,item.id)" :style="{backgroundImage: 'url(../../static/bookmark/'+item.iconUrl+')'}"></span>
+              <span class="note-kind-img-span" @click="showColorSelectDivEvent($event,item.id)" :style="{backgroundImage: 'url(../../color-note/static/bookmark/'+item.iconUrl+')'}"></span>
               <input v-model="item.markText" @blur="leaveContentInput($event,item.id)" class="inputKind"/>
               <span class="note-kind-img-close" @click="deleteKindById(item.id)" :style="{backgroundImage: 'url('+closeSingleIconUrl+')'}"></span>
               <br/>

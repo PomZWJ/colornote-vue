@@ -11,7 +11,7 @@ let imgBaseUrl = '';
 
 if(process.env.NODE_ENV == 'development') {
   baseUrl = "http://vzdn.natapp1.cc/ColorNote/";
-  imgBaseUrl = '../../static/';
+  imgBaseUrl = '../../color-note/static/';
 }else if(process.env.NODE_ENV == 'production'){
   baseUrl = "http://182.254.163.38/ColorNote/";
   imgBaseUrl = 'static/';

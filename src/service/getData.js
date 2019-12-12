@@ -170,3 +170,10 @@ export const updateNoteKindByUserId = (params)=>{
   return response;
 }
 
+export const tryAccountLogin = ()=>{
+  let data = {
+  }
+  let response = fetch('/user/tryAccountLogin',data);
+  return response;
+}
+
