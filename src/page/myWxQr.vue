@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow: auto;">
     <div style="position: relative">
       <div style="width: 100%;position: fixed;bottom: 0px;top: 0px;background-color: white">
         <div class="qr-home">
@@ -36,9 +36,6 @@
                 textSpan: "扫描下面二维码加我好友，拉你进群，备注进群即可"
             }
         },
-        mounted(){
-            this.initData();
-        },
         components:{
             loading
         },
@@ -54,6 +51,7 @@
   .qr-home {
     padding: 30px;
     background-color: white;
+
   }
   .qr-bar {
     display: flex;
@@ -73,6 +71,7 @@
   .content-div{
     padding-top: 200px;
     text-align: center;
+
   }
   .text-span{
     font-size: 40px;

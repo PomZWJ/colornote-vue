@@ -36,17 +36,21 @@
       <transition name="loading">
         <loading v-show="showLoading"></loading>
       </transition>
+      <transition name="tipPop">
+        <tipPop v-if="showTipPop" @autoClose="showTipPop = false" :tipPopText="tipPopText"></tipPop>
+      </transition>
     </div>
 </template>
 
 <script>
-    import {imgBaseUrl} from '@/config/env'
+    import {imgBaseUrl,systemOkCode} from '@/config/env'
     import {
         getAllNoteKindByUserIdWithoutNull,
         deleteNoteKindByNoteKindId,
         updateNoteKindByUserId
     } from '@/service/getData'
     import loading from '@/components/loading'
+    import tipPop from '@/components/tipPop'
     export default {
         data(){
             return{
@@ -62,13 +66,15 @@
                 hideSelectedNoteKindId: '',
                 bindEachDiv: '',
                 showLoading: false,
+                showTipPop: false,
+                tipPopText: ''
             }
         },
         mounted(){
             this.initData();
         },
         components:{
-            loading
+            loading,tipPop
         },
         methods:{
             goBack() {
@@ -84,10 +90,25 @@
                 this.showLoading = false;
             },
             async initData(){
-                this.list = await getAllNoteKindByUserIdWithoutNull();
+                this.showLoading = true;
+                let data = await getAllNoteKindByUserIdWithoutNull();
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                this.list = data.params;
             },
             async deleteKindById(noteKindId){
-                await deleteNoteKindByNoteKindId(noteKindId);
+                this.showLoading = true;
+                let data = await deleteNoteKindByNoteKindId(noteKindId);
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
                 this.initData();
             },
             showColorSelectDivEvent(e,noteKindId){

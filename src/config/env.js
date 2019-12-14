@@ -7,6 +7,7 @@
 let baseUrl = '';
 let routerMode = 'hash';
 let imgBaseUrl = '';
+let systemOkCode = '000000';
 
 
 if(process.env.NODE_ENV == 'development') {
@@ -19,5 +20,6 @@ if(process.env.NODE_ENV == 'development') {
 export {
   baseUrl,
   routerMode,
-  imgBaseUrl
+  imgBaseUrl,
+  systemOkCode
 }

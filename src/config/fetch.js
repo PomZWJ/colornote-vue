@@ -14,13 +14,7 @@ export default async(url='',data={},type='POST')=>{
         url: url,
         data: qs.stringify(data),
       }).then((response)=>{
-        let data = response.data;
-        if(data.resultCode!='000000'){
-          alert(data.resultMsg);
-        }else{
-          let params = data.params;
-          resolve(params);
-        }
+        resolve(response.data);
       }).catch((error)=>{
         alert(error);
       });

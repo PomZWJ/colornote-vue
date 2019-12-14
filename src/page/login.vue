@@ -30,14 +30,18 @@
       <transition name="loading">
         <loading v-show="showLoading"></loading>
       </transition>
+      <transition name="tipPop">
+        <tipPop v-if="showTipPop" @autoClose="showTipPop = false" :tipPopText="tipPopText"></tipPop>
+      </transition>
     </div>
 </template>
 
 <script>
-    import {imgBaseUrl} from '@/config/env'
+    import {imgBaseUrl,systemOkCode} from '@/config/env'
     import {userlogin,sendVerificationCode,tryAccountLogin} from '@/service/getData'
     import { setStore,getStore,removeStore } from '@/config/mUtils' // 本地存储方法封装
     import loading from '@/components/loading'
+    import tipPop from '@/components/tipPop'
     export default {
         data(){
             return{
@@ -60,10 +64,12 @@
                 userPwdInputBorderColor: "rgba(0, 0, 0, 0.42)",
                 loginBtnDis:true,
                 showLoading: false,
+                showTipPop: false,
+                tipPopText: ''
             }
         },
         components:{
-            loading
+            loading,tipPop
         },
         methods:{
             async sendVerificationEvent(){
@@ -95,8 +101,15 @@
                 let a = this.monitorPhoneUtils();
                 let b = this.monitorUserPwdInput();
                 if(a&&b){
-                    //this.showLoading = false;
-                    let params = await userlogin(this.userId,this.userVerification);
+                    this.showLoading = true;
+                    let data = await userlogin(this.userId,this.userVerification);
+                    this.showLoading = false;
+                    if(data.resultCode!=systemOkCode){
+                        this.tipPopText = data.resultMsg;
+                        this.showTipPop = true;
+                        return;
+                    }
+                    let params = data.params;
                     this.loginBtnDis = true;
 
                     setStore("userId",params.userId);
@@ -141,7 +154,8 @@
                 }
             },
             async tryAccountLoginEvent(){
-                let params = await tryAccountLogin();
+                let data = await tryAccountLogin();
+                let params = data.params;
                 this.loginBtnDis = true;
                 setStore("userId",params.userId);
                 setStore("token",params.token);

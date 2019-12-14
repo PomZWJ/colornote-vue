@@ -154,13 +154,20 @@
     <transition name="deleteConfirmPop">
       <deleteConfirmPop @deleteOk="confirmDelete" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
     </transition>
+    <transition name="tipPop">
+      <tipPop v-if="showTipPop" @autoClose="showTipPop = false" :tipPopText="tipPopText"></tipPop>
+    </transition>
+    <transition name="loading">
+      <loading v-show="showLoading"></loading>
+    </transition>
     <span  style="display: none">{{preDeleteNoteId}}</span>
+
   </div>
 
 
 </template>
 <script>
-    import {imgBaseUrl} from '@/config/env'
+    import {imgBaseUrl,systemOkCode} from '@/config/env'
     import {
         getAllNote,
         getUserInfo,
@@ -172,6 +179,8 @@
     import deleteConfirmPop from '@/components/deleteConfirmPop'
     import alertTip from '@/components/alertTip'
     import {setStore, getStore, removeStore} from '@/config/mUtils' // 本地存储方法封装
+    import tipPop from '@/components/tipPop'
+    import loading from '@/components/loading'
     export default {
         data() {
             return {
@@ -223,7 +232,10 @@
                 seachConditionText: '',
                 indexSelectNoteKindId:"",
                 indexSelectMyFav:'',
-                titleBigText:'全部笔记'
+                titleBigText:'全部笔记',
+                showTipPop: false,
+                tipPopText: '',
+                showLoading: false
 
             }
         },
@@ -234,7 +246,9 @@
         components:{
             addNoteKindPop,
             deleteConfirmPop,
-            alertTip
+            alertTip,
+            tipPop,
+            loading
         },
         methods: {
             showAlertTip(text){
@@ -259,7 +273,15 @@
                     favState = '1';
                 }
                 let cs = e.target;
-                let flag = await updateNoteFavState(noteId,favState);
+                this.showLoading = true;
+                let data = await updateNoteFavState(noteId,favState);
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                let flag = data.params;
                 if(flag == true){
                     for(let i=0;i<this.bookNotes.length;i++){
                         if(this.bookNotes[i].noteId == noteId){
@@ -328,16 +350,32 @@
             },
             async initData(){
                 this.getAllNoteBook();
-                let userInfo = await getUserInfo();
+                let data = await getUserInfo();
+                let userInfo = data.params;
                 this.userIdText = userInfo.user.userName;
                 this.indexPageData();
 
             },
             async getAllNoteBook(){
-                this.bookNotes = await getAllNote(this.seachConditionText,this.indexSelectNoteKindId,this.indexSelectMyFav);
+                this.showLoading = true;
+                let data = await getAllNote(this.seachConditionText,this.indexSelectNoteKindId,this.indexSelectMyFav);
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                this.bookNotes = data.params;
+
             },
             async indexPageData(){
-                let userIndexInfo = await getUserIndexInfo();
+                let data = await getUserIndexInfo();
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                let userIndexInfo = data.params;
                 this.allNoteNum = userIndexInfo.allNote;
                 this.favoriteNum = userIndexInfo.myFav;
                 this.rubbishNum = userIndexInfo.nearDel;
@@ -361,7 +399,15 @@
                 this.showAlertTip("复制成功");
             },
             async confirmDelete(){
-                let flag = await deleteNoteToRubbishByUserIdAndNoteId(this.preDeleteNoteId);
+                this.showLoading = true;
+                let data = await deleteNoteToRubbishByUserIdAndNoteId(this.preDeleteNoteId);
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                let flag = data.params;
                 if(flag == true){
                     this.showAlertTip("删除成功");
                 }
@@ -391,7 +437,8 @@
                 }else if(titleText=='未分类'){
                     this.indexSelectNoteKindId = "NOT_KIND";
                 }
-                this.bookNotes = this.getAllNoteBook();
+                this.showLoading = true;
+                this.bookNotes  = this.getAllNoteBook();
             },
             isShowNoSearchResultUI(){
                 if((this.bookNotes==''||this.bookNotes.length==0) && this.seachConditionText.trim() != ''){

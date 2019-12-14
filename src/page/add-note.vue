@@ -51,11 +51,14 @@
     <transition name="deleteConfirmPop">
       <deleteConfirmPop @deleteOk="deleteNote" @autoClose="showDeleteConfirmPopWin=false" v-show="showDeleteConfirmPopWin"></deleteConfirmPop>
     </transition>
+    <transition name="tipPop">
+      <tipPop v-if="showTipPop" @autoClose="showTipPop = false" :tipPopText="tipPopText"></tipPop>
+    </transition>
   </div>
 </template>
 
 <script>
-    import {imgBaseUrl} from '@/config/env'
+    import {imgBaseUrl,systemOkCode} from '@/config/env'
     import {
         getSystemCurrentTime,
         getAllNoteKindByUserId,
@@ -69,6 +72,7 @@
     import alertTip from '@/components/alertTip'
     import addNoteKindPop from '@/components/addNoteKindPop'
     import deleteConfirmPop from '@/components/deleteConfirmPop'
+    import tipPop from '@/components/tipPop'
     export default {
         data() {
             return {
@@ -91,11 +95,13 @@
                 alertText: '', //提示的内容
                 showAlert: false,
                 showNewNoteKindPopWin: false,
-                showDeleteConfirmPopWin: false
+                showDeleteConfirmPopWin: false,
+                showTipPop: false,
+                tipPopText: ''
             }
         },
         components:{
-          loading, alertTip,addNoteKindPop,deleteConfirmPop
+          loading, alertTip,addNoteKindPop,deleteConfirmPop,tipPop
         },
         mounted () {
             this.initData();
@@ -148,17 +154,33 @@
                     this.showAlertTip("笔记内容不能为空");
                     return ;
                 }
-                this.currentTime = await getSystemCurrentTime();
+                this.currentTime = (await getSystemCurrentTime()).params;
                 const noteId = this.$route.query.noteId;
                 const action = this.$route.query.action;
                 if(action == 'edit'){
-                    let flag = await updateUserNoteInfo(noteId,this.selectNoteKindText,this.noteContent,this.currentTime);
+                    this.showLoading = true;
+                    let data = await updateUserNoteInfo(noteId,this.selectNoteKindText,this.noteContent,this.currentTime);
+                    this.showLoading = false;
+                    if(data.resultCode!=systemOkCode){
+                        this.tipPopText = data.resultMsg;
+                        this.showTipPop = true;
+                        return;
+                    }
+                    let flag = data.params;
                     if(flag == true){
                         this.showAlertTip("更新成功");
                         //this.$router.go(-1);
                     }
                 }else{
-                    let flag = await addUserNoteInfo(this.selectNoteKindText,this.noteContent,this.currentTime);
+                    this.showLoading = true;
+                    let data = await addUserNoteInfo(this.selectNoteKindText,this.noteContent,this.currentTime);
+                    this.showLoading = false;
+                    if(data.resultCode!=systemOkCode){
+                        this.tipPopText = data.resultMsg;
+                        this.showTipPop = true;
+                        return;
+                    }
+                    let flag = data.params;
                     if(flag == true){
                         this.showAlertTip("插入成功");
                         //this.$router.go(-1);
@@ -171,14 +193,28 @@
             async initData(){
                 const action = this.$route.query.action;
                 if(action != 'edit'){
-                    this.currentTime = await getSystemCurrentTime();
+                    this.currentTime = (await getSystemCurrentTime()).params;
                 }
-
-                this.list = await getAllNoteKindByUserId();
+                this.showLoading = true;
+                let data = await getAllNoteKindByUserId();
                 this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                this.list = data.params;
             },
             async getNoteInfo(noteId){
-                let myNote = await getUserNoteByNoteId(noteId);
+                this.showLoading = true;
+                let data = await getUserNoteByNoteId(noteId);
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                let myNote = data.params;
                 this.noteContent = myNote.noteContent;
                 this.currentTime = myNote.noteTime;
                 this.selectNoteKindText = myNote.noteKindId;
@@ -206,7 +242,15 @@
                 }else{
                     this.favState = '1';
                 }
-                let flag = await updateNoteFavState(noteId,this.favState);
+                this.showLoading = true;
+                let data = await updateNoteFavState(noteId,this.favState);
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                let flag = data.params;
                 if(flag == true){
                     if(this.favState == '0'){
                         this.favBtnIconUrl = imgBaseUrl+"/footmenu/fav_icon_foot.png";
@@ -224,7 +268,15 @@
                     this.showAlertTip("请先保存当前笔记");
                     return ;
                 }
-                let flag = await deleteNoteToRubbishByUserIdAndNoteId(noteId);
+                this.showLoading = true;
+                let data = await deleteNoteToRubbishByUserIdAndNoteId(noteId);
+                this.showLoading = false;
+                if(data.resultCode!=systemOkCode){
+                    this.tipPopText = data.resultMsg;
+                    this.showTipPop = true;
+                    return;
+                }
+                let flag = data.params;
                 if(flag == true){
                     this.showAlertTip("删除成功");
                     this.$router.go(-1);
